@@ -54,15 +54,19 @@ public class PatrouilleWalk implements IIdleAI {
         this.numberCheckpoints = numberCheckpoints;
         this.pauseFrames = pauseTime / (1000 / Constants.FRAME_RATE);
         this.mode = mode;
+
     }
 
     private void init(Entity entity) {
         initialized = true;
+
+
         PositionComponent position =
                 (PositionComponent)
                         entity.getComponent(PositionComponent.class)
                                 .orElseThrow(
                                         () -> new MissingComponentException("PositionComponent"));
+        position.setPosition(Game.currentLevel.getRandomFloorTile().getCoordinate().toPoint());
         Point center = position.getPosition();
         Tile tile = Game.currentLevel.getTileAt(position.getPosition().toCoordinate());
 
@@ -86,6 +90,7 @@ public class PatrouilleWalk implements IIdleAI {
             }
             maxTries++;
         }
+
     }
 
     @Override
@@ -159,5 +164,8 @@ public class PatrouilleWalk implements IIdleAI {
             }
             default -> {}
         }
+    }
+    public Tile getSpawnTile(){
+        return checkpoints.get(0);
     }
 }
