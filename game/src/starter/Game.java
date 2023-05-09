@@ -12,24 +12,36 @@ import configuration.Configuration;
 import configuration.KeyboardConfig;
 import controller.AbstractController;
 import controller.SystemController;
+import ecs.components.Component;
 import ecs.components.MissingComponentException;
 import ecs.components.PositionComponent;
-import ecs.entities.Entity;
-import ecs.entities.Hero;
+import ecs.components.ai.AIComponent;
+import ecs.components.ai.idle.PatrouilleWalk;
+import ecs.entities.*;
+import ecs.entities.Monsters.BlueChort;
+import ecs.entities.Monsters.Chort;
+import ecs.entities.Monsters.Imp;
+import ecs.entities.Traps.Arrow;
+import ecs.entities.Traps.Spikes;
 import ecs.systems.*;
 import graphic.DungeonCamera;
 import graphic.Painter;
 import graphic.hud.PauseMenu;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.logging.Logger;
 import level.IOnLevelLoader;
 import level.LevelAPI;
 import level.elements.ILevel;
+import level.elements.tile.FloorTile;
 import level.elements.tile.Tile;
+import level.elements.tile.WallTile;
 import level.generator.IGenerator;
 import level.generator.postGeneration.WallGenerator;
 import level.generator.randomwalk.RandomWalkGenerator;
+import level.tools.Coordinate;
+import level.tools.LevelElement;
 import level.tools.LevelSize;
 import tools.Constants;
 import tools.Point;
@@ -73,6 +85,18 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     private static PauseMenu<Actor> pauseMenu;
     private static Entity hero;
     private Logger gameLogger;
+    private static Entity monster;
+    private static Entity traps;
+
+    private static Entity geist;
+    private static Entity grabstein;
+    private int countUpdatePerSecond=0;
+    private int geistInvisiblTime=5;
+    private Random random=new Random();
+
+    private int depth = 0;
+
+    private Random rnd = new Random();
 
     public static void main(String[] args) {
         // start the game
@@ -99,6 +123,30 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         levelAPI.update();
         controller.forEach(AbstractController::update);
         camera.update();
+        countUpdatePerSecond++;
+        if(countUpdatePerSecond>=30)
+        {
+            countUpdatePerSecond=0;
+            updatePerSecond();
+        }
+
+    }
+    private void updatePerSecond()
+    {
+        if(getEntities().contains(geist)&&((Ghost) geist).isVisibil()&&random.nextInt(0,100)<=10)
+        {
+            gameLogger.info("The Ghost is Disapperd but you can still feel his presents");
+            ((Ghost) geist).SetInvisibil();
+            geistInvisiblTime=random.nextInt(2,7);
+
+
+        }
+        if(getEntities().contains(geist)&&!((Ghost) geist).isVisibil()&&geistInvisiblTime<=0)
+        {
+            gameLogger.info("The Ghost has apperde once again");
+            ((Ghost) geist).SetVisibil();
+        }
+        geistInvisiblTime-=1;
     }
 
     /** Called once at the beginning of the game. */
@@ -116,6 +164,9 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         pauseMenu = new PauseMenu<>();
         controller.add(pauseMenu);
         hero = new Hero();
+
+
+
         levelAPI = new LevelAPI(batch, painter, new WallGenerator(new RandomWalkGenerator()), this);
         levelAPI.loadLevel(LEVELSIZE);
         createSystems();
@@ -131,9 +182,20 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
 
     @Override
     public void onLevelLoad() {
+        depth++;
+
         currentLevel = levelAPI.getCurrentLevel();
         entities.clear();
         getHero().ifPresent(this::placeOnLevelStart);
+        //spawnMonster();
+        setTraps();
+        /*if(random.nextInt(0,100)<=50) {
+            gameLogger.info("a Haunted Spirit has been Locked in this layer free him ");
+            geist = new Ghost();
+            grabstein = new Tombstone(((Ghost) geist));
+        }*/
+
+
     }
 
     private void manageEntitiesSets() {
@@ -216,6 +278,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
      * @param entity will be removed from the game next frame
      */
     public static void removeEntity(Entity entity) {
+        entity.OnDelete();
         entitiesToRemove.add(entity);
     }
 
@@ -246,6 +309,9 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     public static Optional<Entity> getHero() {
         return Optional.ofNullable(hero);
     }
+    public static Optional<Entity> getChort() {
+        return Optional.ofNullable(monster);
+    }
 
     /**
      * set the reference of the playable character careful: old hero will not be removed from the
@@ -273,7 +339,40 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         // See also:
         // https://stackoverflow.com/questions/52011592/libgdx-set-ortho-camera
     }
+    private void setMonsterStart(Entity monster){
 
+        entities.add(monster);
+        PositionComponent pc =
+            (PositionComponent)
+                monster.getComponent(PositionComponent.class)
+                    .orElseThrow(
+                        () -> new MissingComponentException("PositionComponent"));
+        if (monster.getClass()== Chort.class) {
+
+        } else{
+            pc.setPosition(currentLevel.getRandomFloorTile().getCoordinate().toPoint());
+        }
+
+    }
+    private void spawnMonster(){
+        int j = (((rnd.nextInt(3)+1)*(int)(1+0.2*depth))+1);
+        int x;
+        Monster[] mons = new Monster[j];
+        for (int i = 0; i<j; i++){
+            x = rnd.nextInt(3);
+            if (x==0){
+                mons[i] = new Chort();
+            }
+            else if (x==1){
+                mons[i] = new BlueChort();
+            }
+            else {
+                mons[i] = new Imp();
+            }
+            setMonsterStart(mons[i]);
+
+        }
+    }
     private void createSystems() {
         new VelocitySystem();
         new DrawSystem(painter);
@@ -285,4 +384,19 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         new SkillSystem();
         new ProjectileSystem();
     }
+    /**
+     * initalize Traps for the Dungeon
+     * This Methode is called onLevelLoad
+     */
+
+    private void setTraps(){
+        for(int i = 0; i<5;i++){
+            new Spikes();
+        }
+        new Spikes();
+        new Arrow();
+    }
+
+
 }
+

@@ -1,4 +1,4 @@
-package ecs.entities;
+package ecs.entities.Monsters;
 
 import dslToGame.AnimationBuilder;
 import ecs.components.ai.fight.CollideAI;
@@ -7,9 +7,14 @@ import ecs.components.ai.idle.IIdleAI;
 import ecs.components.ai.idle.RadiusWalk;
 import ecs.components.ai.transition.ITransition;
 import ecs.components.ai.transition.RangeTransition;
+import ecs.entities.Monster;
 import graphic.Animation;
 
-public class Imp extends Monster{
+/**
+ * the Imp is a simple Monster. It randomly walks through the Dungeon until it is in range of the Player
+ * this classs has all its components and attributes .
+ */
+public class Imp extends Monster {
     static float speed = 0.1f;
     static Animation idleLeft = AnimationBuilder.buildAnimation("character/monster/imp/idleLeft");
     static Animation idleRight = AnimationBuilder.buildAnimation("character/monster/imp/idleRight");
