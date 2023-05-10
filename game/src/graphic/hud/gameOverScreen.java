@@ -18,7 +18,7 @@ public class gameOverScreen extends JFrame {
      */
     public gameOverScreen() {
         setTitle("Game Over");
-        setBounds(100, 150, 329, 169);
+        setBounds(100, 150, 500, 300);
 
         GameOverPan = new JPanel();
         GameOverPan.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -29,13 +29,13 @@ public class gameOverScreen extends JFrame {
          * Jbutton for the reset
          */
         JButton btNeustart = new JButton("Neustart");
-        btNeustart.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        btNeustart.setFont(new Font("Tahoma", Font.PLAIN, 15));
         btNeustart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
               Restart();
             }
         });
-        btNeustart.setBounds(20, 82, 89, 25);
+        btNeustart.setBounds(20, 80, 89, 25);
         GameOverPan.add(btNeustart);
         /**
          * Jbutton for the end
@@ -48,7 +48,7 @@ public class gameOverScreen extends JFrame {
             }
 
         });
-        btBeenden.setBounds(121, 82, 89, 25);
+        btBeenden.setBounds(150, 80, 89, 25);
         GameOverPan.add(btBeenden);
         setVisible(true);
     }

@@ -427,8 +427,10 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         depth=0;
         hero = new Hero();
         QuestLog.getInstance().restar();
+
         QuestLog.getInstance().SetPlayer((Hero) hero);
         levelAPI.loadLevel(LevelSize.SMALL);
+
 
     }
 
