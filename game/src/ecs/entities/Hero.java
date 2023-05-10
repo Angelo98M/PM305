@@ -33,7 +33,7 @@ import starter.Game;
         public Hero() {
             super();
             new PositionComponent(this);
-            new HealthComponent(this, 3333, new IOnDeathFunction() {
+            new HealthComponent(this, 10, new IOnDeathFunction() {
                 @Override
                 public void onDeath(Entity entity) {
 
@@ -69,7 +69,11 @@ import starter.Game;
 
         private void setupHitboxComponent() {
             HitboxComponent hit = new HitboxComponent(this, (you, other, direction) -> ((HealthComponent)other.getComponent(HealthComponent.class).get()).receiveHit(dmg),
-                (you, other, direction) -> System.out.println("chortCollisionLeave")/*health.receiveHit(dmg)*/);
+                (you, other, direction) -> System.out.println("HeroCollisionLeave")/*health.receiveHit(dmg)*/);
+        }
+
+        public void setDmg(int dmg){
+            this.dmg = new Damage(dmg,DamageType.PHYSICAL,null);
         }
     }
 

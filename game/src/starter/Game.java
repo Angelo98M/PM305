@@ -20,6 +20,7 @@ import ecs.components.ai.idle.PatrouilleWalk;
 import ecs.entities.*;
 import ecs.entities.Items.GreatSword;
 import ecs.entities.Items.HealthPotion;
+import ecs.entities.Items.RubberArmor;
 import ecs.entities.Monsters.BlueChort;
 import ecs.entities.Monsters.Chort;
 import ecs.entities.Monsters.Imp;
@@ -215,7 +216,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         entities.clear();
         getHero().ifPresent(this::placeOnLevelStart);
         //spawnMonster();
-        setTraps();
+        //setTraps();
         /*if(random.nextInt(0,100)<=50) {
             gameLogger.info("a Haunted Spirit has been Locked in this layer free him ");
             geist = new Ghost();
@@ -229,7 +230,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             itemBuilder.buildWorldItem(new GreatSword());
         }
         if(depth==10){
-            itemBuilder.buildWorldItem(new GreatSword());
+            itemBuilder.buildWorldItem(new RubberArmor());
         }
         itemBuilder.buildWorldItem(new HealthPotion());
         QuestLog.getInstance().checkAllQuests();
