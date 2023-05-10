@@ -29,13 +29,13 @@ public class gameOverScreen extends JFrame {
          * Jbutton for the reset
          */
         JButton btNeustart = new JButton("Neustart");
-        btNeustart.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        btNeustart.setFont(new Font("Tahoma", Font.PLAIN, 12));
         btNeustart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
               Restart();
             }
         });
-        btNeustart.setBounds(20, 80, 89, 25);
+        btNeustart.setBounds(20, 150, 90, 25);
         GameOverPan.add(btNeustart);
         /**
          * Jbutton for the end
@@ -48,7 +48,7 @@ public class gameOverScreen extends JFrame {
             }
 
         });
-        btBeenden.setBounds(150, 80, 89, 25);
+        btBeenden.setBounds(375, 150, 90, 25);
         GameOverPan.add(btBeenden);
         setVisible(true);
     }
