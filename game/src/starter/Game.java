@@ -14,18 +14,20 @@ import controller.AbstractController;
 import controller.SystemController;
 import ecs.Quests.QuestGiver.DungonQuestGiver;
 import ecs.Quests.QuestLog;
-import ecs.components.Component;
-import ecs.components.HealthComponent;
-import ecs.components.MissingComponentException;
-import ecs.components.PositionComponent;
+import ecs.components.*;
 import ecs.components.ai.AIComponent;
 import ecs.components.ai.idle.PatrouilleWalk;
 import ecs.entities.*;
+import ecs.entities.Items.GreatSword;
+import ecs.entities.Items.HealthPotion;
+import ecs.entities.Items.RubberArmor;
 import ecs.entities.Monsters.BlueChort;
 import ecs.entities.Monsters.Chort;
 import ecs.entities.Monsters.Imp;
 import ecs.entities.Traps.Arrow;
 import ecs.entities.Traps.Spikes;
+import ecs.items.ItemData;
+import ecs.items.WorldItemBuilder;
 import ecs.systems.*;
 import graphic.DungeonCamera;
 import graphic.Painter;
@@ -92,6 +94,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     private static Entity hero;
     private Logger gameLogger;
     private static Entity monster;
+    private WorldItemBuilder itemBuilder = new WorldItemBuilder();
     private static Entity traps;
 
     private static Entity geist;
@@ -186,6 +189,23 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         getHero().ifPresent(this::loadNextLevelIfEntityIsOnEndTile);
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) togglePause();
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) System.out.println(QuestLog.getInstance().printLog());
+        if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+            InventoryComponent inventory = ((InventoryComponent)getHero().get().getComponent(InventoryComponent.class).get());
+            HealthComponent health = ((HealthComponent)getHero().get().getComponent(HealthComponent.class).get());
+            List<ItemData> inv = inventory.getItems();
+            System.out.println("Aktuelle HP : "+ health.getCurrentHealthpoints() );
+            System.out.println("Das Inventar enthaelt");
+            for (ItemData s:inv){
+                System.out.println(s.getItemName());
+            }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
+            InventoryComponent inventory = ((InventoryComponent)getHero().get().getComponent(InventoryComponent.class).get());
+            List<ItemData> inv = inventory.getItems();
+            if (inv.get(2).getDescription() == "A Potion that restores 3 HP"){
+                inv.get(2).triggerUse(getHero().get());
+
+            }}
     }
 
     @Override
@@ -196,7 +216,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         entities.clear();
         getHero().ifPresent(this::placeOnLevelStart);
         //spawnMonster();
-        setTraps();
+        //setTraps();
         /*if(random.nextInt(0,100)<=50) {
             gameLogger.info("a Haunted Spirit has been Locked in this layer free him ");
             geist = new Ghost();
@@ -206,6 +226,13 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         {
             giver=new DungonQuestGiver();
         }
+        if(depth==5){
+            itemBuilder.buildWorldItem(new GreatSword());
+        }
+        if(depth==10){
+            itemBuilder.buildWorldItem(new RubberArmor());
+        }
+        itemBuilder.buildWorldItem(new HealthPotion());
         QuestLog.getInstance().checkAllQuests();
 
 
