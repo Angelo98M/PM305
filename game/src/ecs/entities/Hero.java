@@ -28,9 +28,10 @@ public class Hero extends Entity {
     public Hero() {
         super();
         new PositionComponent(this);
-        new HealthComponent(this, 3333, new IOnDeathFunction() {
+        new HealthComponent(this, 3, new IOnDeathFunction() {
             @Override
             public void onDeath(Entity entity) {
+                gameOver
 
             }
         },AnimationBuilder.buildAnimation("character/knight/hit/knight_m_hit_anim_f0.png"),AnimationBuilder.buildAnimation("character/knight/hit/knight_m_hit_anim_f0.png"));
