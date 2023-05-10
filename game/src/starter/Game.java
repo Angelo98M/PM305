@@ -410,11 +410,28 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         new Spikes();
         new Arrow();
     }
-public static void GameOver(){
-        gameOver= new gameOverScreen();
 
+    /**
+     * Implementing Gameover Method
+     */
+    public static void GameOver(){
+        gameOver= new gameOverScreen();
+    }
+
+
+    /**
+     * Implementing neustart Method
+     * Resets the level and other components
+     */
+    public void neustart(){
+        depth=0;
+        hero = new Hero();
+        QuestLog.getInstance().restar();
+        QuestLog.getInstance().SetPlayer((Hero) hero);
+        levelAPI.loadLevel(LevelSize.SMALL);
 
     }
+
 
     public static int getCurrentLevel()
     {
