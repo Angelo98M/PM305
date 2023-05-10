@@ -13,6 +13,7 @@ import configuration.KeyboardConfig;
 import controller.AbstractController;
 import controller.SystemController;
 import ecs.components.Component;
+import ecs.components.HealthComponent;
 import ecs.components.MissingComponentException;
 import ecs.components.PositionComponent;
 import ecs.components.ai.AIComponent;
@@ -31,6 +32,8 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.logging.Logger;
+
+import graphic.hud.gameOverScreen;
 import level.IOnLevelLoader;
 import level.LevelAPI;
 import level.elements.ILevel;
@@ -83,6 +86,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
 
     public static ILevel currentLevel;
     private static PauseMenu<Actor> pauseMenu;
+    private static gameOverScreen gameOver;
     private static Entity hero;
     private Logger gameLogger;
     private static Entity monster;
@@ -396,7 +400,10 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         new Spikes();
         new Arrow();
     }
+public static void GameOver(){
+        gameOver= new gameOverScreen();
 
+    }
 
 }
 
