@@ -1,6 +1,7 @@
 package ecs.entities;
 
 import dslToGame.AnimationBuilder;
+import ecs.Quests.QuestLog;
 import ecs.components.*;
 import ecs.components.ai.AIComponent;
 import ecs.components.ai.fight.CollideAI;
@@ -36,7 +37,7 @@ public abstract class Monster extends Entity{
         HealthComponent health = new HealthComponent(this, maxHealth, new IOnDeathFunction() {
             @Override
             public void onDeath(Entity entity) {
-
+                QuestLog.getInstance().checkAllQuests(entity);
             }
         },dieAnimation, getHitAnimation);
         HitboxComponent hit = new HitboxComponent(this, (you, other, direction) -> health.receiveHit(dmg),
