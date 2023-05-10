@@ -5,14 +5,14 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.beans.Visibility;
 
 public class gameOverScreen extends JFrame {
     private JPanel GameOverPan;
 
     public void neustart(){
-        ProcessBuilder processBuilder = new ProcessBuilder("doc/basics/Neustart.bat");
-        System.exit(0);
+
+
     }
     public void beenden() {
         System.exit(0);
@@ -46,5 +46,6 @@ public class gameOverScreen extends JFrame {
         });
         btBeenden.setBounds(121, 82, 89, 25);
         GameOverPan.add(btBeenden);
+        setVisible(true);
     }
 }
