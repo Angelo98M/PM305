@@ -6,6 +6,8 @@ import ecs.components.AnimationComponent;
 import ecs.components.PositionComponent;
 import ecs.components.VelocityComponent;
 import ecs.components.skill.*;
+import ecs.damage.Damage;
+import ecs.damage.DamageType;
 import graphic.Animation;
 import starter.Game;
 
@@ -20,7 +22,7 @@ import starter.Game;
         private final int fireballCoolDown = 5;
         private final float xSpeed = 0.3f;
         private final float ySpeed = 0.3f;
-
+        private Damage dmg = new Damage(2, DamageType.PHYSICAL,null);
         private final String pathToIdleLeft = "knight/idleLeft";
         private final String pathToIdleRight = "knight/idleRight";
         private final String pathToRunLeft = "knight/runLeft";
@@ -44,6 +46,7 @@ import starter.Game;
             PlayableComponent pc = new PlayableComponent(this);
             setupFireballSkill();
             pc.setSkillSlot1(firstSkill);
+
         }
 
         private void setupVelocityComponent() {
@@ -65,10 +68,8 @@ import starter.Game;
         }
 
         private void setupHitboxComponent() {
-            new HitboxComponent(
-                    this,
-                    (you, other, direction) -> System.out.println("heroCollisionEnter"),
-                    (you, other, direction) -> System.out.println("heroCollisionLeave"));
+            HitboxComponent hit = new HitboxComponent(this, (you, other, direction) -> ((HealthComponent)other.getComponent(HealthComponent.class).get()).receiveHit(dmg),
+                (you, other, direction) -> System.out.println("chortCollisionLeave")/*health.receiveHit(dmg)*/);
         }
     }
 
