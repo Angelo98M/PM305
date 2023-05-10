@@ -12,6 +12,8 @@ import configuration.Configuration;
 import configuration.KeyboardConfig;
 import controller.AbstractController;
 import controller.SystemController;
+import ecs.Quests.QuestGiver.DungonQuestGiver;
+import ecs.Quests.QuestLog;
 import ecs.components.Component;
 import ecs.components.MissingComponentException;
 import ecs.components.PositionComponent;
@@ -92,9 +94,10 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     private static Entity grabstein;
     private int countUpdatePerSecond=0;
     private int geistInvisiblTime=5;
+    private DungonQuestGiver giver;
     private Random random=new Random();
 
-    private int depth = 0;
+    private static int depth = 0;
 
     private Random rnd = new Random();
 
@@ -178,6 +181,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         manageEntitiesSets();
         getHero().ifPresent(this::loadNextLevelIfEntityIsOnEndTile);
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) togglePause();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) System.out.println(QuestLog.getInstance().printLog());
     }
 
     @Override
@@ -194,6 +198,12 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             geist = new Ghost();
             grabstein = new Tombstone(((Ghost) geist));
         }*/
+        if(depth==1)
+        {
+            giver=new DungonQuestGiver();
+        }
+        QuestLog.getInstance().checkAllQuests();
+
 
 
     }
@@ -395,6 +405,11 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         }
         new Spikes();
         new Arrow();
+    }
+
+    public static int getCurrentLevel()
+    {
+        return depth;
     }
 
 
