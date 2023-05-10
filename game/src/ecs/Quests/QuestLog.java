@@ -121,6 +121,10 @@ public class QuestLog {
     {
         return questLog;
     }
+    public void restar()
+    {
+        questLog=new QuestLog();
+    }
 
 
 }

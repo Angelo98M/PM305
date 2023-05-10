@@ -31,4 +31,5 @@ public class DungonQuest extends Quest{
             isFinished=true;
         }
     }
+
 }
