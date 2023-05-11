@@ -1,5 +1,6 @@
 package ecs.Quests;
 
+import ecs.entities.Items.HealthPotion;
 import starter.Game;
 
 public class DungonQuest extends Quest{
@@ -27,7 +28,7 @@ public class DungonQuest extends Quest{
         if(Game.getCurrentLevel()==depth)
         {
             System.out.println("Geschafft super");
-            giveReward();
+            giveReward(new HealthPotion());
             isFinished=true;
         }
     }
