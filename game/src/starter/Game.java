@@ -465,8 +465,8 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     public void neustart(){
         depth=0;
         hero = new Hero();
+        ((InventoryComponent)Game.getHero().get().getComponent(InventoryComponent.class).get()).setupInventory();
         QuestLog.getInstance().restar();
-
         QuestLog.getInstance().SetPlayer((Hero) hero);
         levelAPI.loadLevel(LevelSize.SMALL);
 

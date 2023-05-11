@@ -1,6 +1,9 @@
 package ecs.Quests;
 
+import ecs.components.InventoryComponent;
 import ecs.entities.Entity;
+import ecs.items.ItemData;
+import starter.Game;
 
 public class Quest {
     /**
@@ -45,6 +48,18 @@ public class Quest {
     public void giveReward()
     {
 
+    }
+    /**
+     *  hands the player the reward in form of an Item
+     *
+     * @para item ItemData
+     * **/
+    public void giveReward(ItemData item)
+    {
+        Game.getHero().get().getComponent(InventoryComponent.class).ifPresent((x) ->{
+            ((InventoryComponent) x)
+                .addItem((item));
+        });
     }
 
     public Boolean getFinished() {
