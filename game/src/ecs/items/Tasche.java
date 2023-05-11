@@ -5,11 +5,12 @@ import ecs.entities.Entity;
 import graphic.Animation;
 import starter.Game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Tasche extends ItemData{
 
-    private List<Consumables> content;
+    private List<Consumables> content = new ArrayList<>(5);
 
     private int maxSize=5;
     static ItemType itemType = ItemType.Passive;
@@ -21,6 +22,10 @@ public class Tasche extends ItemData{
         super(itemType,inventoryTexture,worldTexture,itemName,description);
     }
     public boolean addConsumable(ItemData item){
+        if(content.isEmpty()){
+            content.add((Consumables) item);
+            return true;
+        }
         if(content.size()<maxSize){
             content.add((Consumables) item);
             return true;
@@ -42,5 +47,8 @@ public class Tasche extends ItemData{
 
     public boolean isEmpty(){
         return content.isEmpty();
+    }
+    public int getAmount(){
+        return content.size()-1;
     }
 }

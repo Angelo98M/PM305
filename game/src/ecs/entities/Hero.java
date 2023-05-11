@@ -5,10 +5,13 @@ import ecs.components.*;
 import ecs.components.AnimationComponent;
 import ecs.components.PositionComponent;
 import ecs.components.VelocityComponent;
+import ecs.components.collision.ICollide;
 import ecs.components.skill.*;
 import ecs.damage.Damage;
 import ecs.damage.DamageType;
+import ecs.items.Tasche;
 import graphic.Animation;
+import level.elements.tile.Tile;
 import starter.Game;
 
 
@@ -40,6 +43,8 @@ import starter.Game;
                 }
             },AnimationBuilder.buildAnimation("character/knight/hit/knight_m_hit_anim_f0.png"),AnimationBuilder.buildAnimation("character/knight/hit/knight_m_hit_anim_f0.png"));
             new InventoryComponent(this,4);
+            ((InventoryComponent)this.getComponent(InventoryComponent.class).get()).addItem(new Tasche());
+
             setupVelocityComponent();
             setupAnimationComponent();
             setupHitboxComponent();
@@ -68,7 +73,14 @@ import starter.Game;
         }
 
         private void setupHitboxComponent() {
-            HitboxComponent hit = new HitboxComponent(this, (you, other, direction) -> ((HealthComponent)other.getComponent(HealthComponent.class).get()).receiveHit(dmg),
+            HitboxComponent hit = new HitboxComponent(this, new ICollide() {
+                @Override
+                public void onCollision(Entity a, Entity b, Tile.Direction from) {
+                    if (b.getComponent(HealthComponent.class).isPresent()){
+                        ((HealthComponent)b.getComponent(HealthComponent.class).get()).receiveHit(dmg);
+                    }
+                }
+            },
                 (you, other, direction) -> System.out.println("HeroCollisionLeave")/*health.receiveHit(dmg)*/);
         }
 

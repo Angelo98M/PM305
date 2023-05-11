@@ -6,12 +6,13 @@ import ecs.components.InventoryComponent;
 import ecs.components.ItemComponent;
 import ecs.entities.Entity;
 import ecs.entities.Hero;
+import ecs.items.Armor;
 import ecs.items.IOnCollect;
 import ecs.items.Swords;
 import graphic.Animation;
 import starter.Game;
 
-public class RubberArmor extends Swords {
+public class RubberArmor extends Armor {
 
     static Animation inventory = AnimationBuilder.buildAnimation("RubberArmor.png");
     static Animation world = AnimationBuilder.buildAnimation("RubberArmor.png");
@@ -48,6 +49,7 @@ public class RubberArmor extends Swords {
                         });
                 HealthComponent health = (HealthComponent) Game.getHero().get().getComponent(HealthComponent.class).get();
                 health.setMaximalHealthpoints(health.getMaximalHealthpoints()+5);
+                health.setCurrentHealthpoints(health.getCurrentHealthpoints()+5);
             }
         });
     }
