@@ -49,6 +49,11 @@ public class Quest {
     {
 
     }
+    /**
+     *  hands the player the reward in form of an Item
+     *
+     * @para item ItemData
+     * **/
     public void giveReward(ItemData item)
     {
         Game.getHero().get().getComponent(InventoryComponent.class).ifPresent((x) ->{
