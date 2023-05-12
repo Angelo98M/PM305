@@ -227,13 +227,13 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         currentLevel = levelAPI.getCurrentLevel();
         entities.clear();
         getHero().ifPresent(this::placeOnLevelStart);
-        //spawnMonster();
-        //setTraps();
-        /*if(random.nextInt(0,100)<=50) {
+        spawnMonster();
+        setTraps();
+        if(random.nextInt(0,100)<=50) {
             gameLogger.info("a Haunted Spirit has been Locked in this layer free him ");
             geist = new Ghost();
             grabstein = new Tombstone(((Ghost) geist));
-        }*/
+        }
         if(depth==1)
         {
             giver=new DungonQuestGiver();

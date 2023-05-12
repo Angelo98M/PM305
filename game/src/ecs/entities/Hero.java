@@ -39,7 +39,7 @@ import starter.Game;
             new HealthComponent(this, 10, new IOnDeathFunction() {
                 @Override
                 public void onDeath(Entity entity) {
-
+                    Game.GameOver();
                 }
             },AnimationBuilder.buildAnimation("character/knight/hit/knight_m_hit_anim_f0.png"),AnimationBuilder.buildAnimation("character/knight/hit/knight_m_hit_anim_f0.png"));
             new InventoryComponent(this,4);

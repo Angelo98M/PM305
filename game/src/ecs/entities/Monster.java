@@ -40,7 +40,14 @@ public abstract class Monster extends Entity{
                 QuestLog.getInstance().checkAllQuests(entity);
             }
         },dieAnimation, getHitAnimation);
-        HitboxComponent hit = new HitboxComponent(this, (you, other, direction) -> ((HealthComponent)other.getComponent(HealthComponent.class).get()).receiveHit(dmg),
-            (you, other, direction) -> System.out.println("chortCollisionLeave")/*health.receiveHit(dmg)*/);
-    }
+        HitboxComponent hit = new HitboxComponent(this, new ICollide() {
+            @Override
+            public void onCollision(Entity a, Entity b, Tile.Direction from) {
+                if (b.getComponent(HealthComponent.class).isPresent()){
+                    ((HealthComponent)b.getComponent(HealthComponent.class).get()).receiveHit(dmg);
+                }
+            }
+        },
+            (you, other, direction) -> System.out.println("HeroCollisionLeave")/*health.receiveHit(dmg)*/);
+}
 }
