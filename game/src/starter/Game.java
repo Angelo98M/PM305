@@ -17,6 +17,7 @@ import ecs.Quests.QuestLog;
 import ecs.components.*;
 import ecs.components.ai.AIComponent;
 import ecs.components.ai.idle.PatrouilleWalk;
+import ecs.components.xp.XPComponent;
 import ecs.entities.*;
 import ecs.entities.Items.GreatSword;
 import ecs.entities.Items.HealthPotion;
@@ -192,9 +193,13 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         if (Gdx.input.isKeyJustPressed(Input.Keys.L)) System.out.println(QuestLog.getInstance().printLog());
         if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
             InventoryComponent inventory = ((InventoryComponent)getHero().get().getComponent(InventoryComponent.class).get());
+            XPComponent XPC=(XPComponent)getHero().get().getComponent(XPComponent.class).get();
             HealthComponent health = ((HealthComponent)getHero().get().getComponent(HealthComponent.class).get());
             List<ItemData> inv = inventory.getItems();
+            MagicPointsComponent MPC = ((MagicPointsComponent)getHero().get().getComponent(MagicPointsComponent.class).get());
+            System.out.println("Du bist Aktuell Level "+XPC.getCurrentLevel()+" dir fehelen noch "+XPC.getXPToNextLevel()+" Erfahrung zum Levelaufstieg");
             System.out.println("Aktuelle HP : "+ health.getCurrentHealthpoints() );
+            System.out.println(MPC.printMP());
             System.out.println("Das Inventar enthaelt");
             for (ItemData s:inv){
                 System.out.print(s.getItemName());
@@ -227,7 +232,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         currentLevel = levelAPI.getCurrentLevel();
         entities.clear();
         getHero().ifPresent(this::placeOnLevelStart);
-        //spawnMonster();
+        spawnMonster();
         //setTraps();
         /*if(random.nextInt(0,100)<=50) {
             gameLogger.info("a Haunted Spirit has been Locked in this layer free him ");

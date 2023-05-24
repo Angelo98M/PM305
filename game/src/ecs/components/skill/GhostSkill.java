@@ -34,10 +34,8 @@ public class GhostSkill implements ISkillFunction{
 
     @Override
     public void skillAbilityReset(Entity entity) {
-        System.out.println("test");
-        if(isUsed==true&&(System.nanoTime()-start)/1e9>=10)
+        if(isUsed==true&&(System.nanoTime()-start)/1e9>=5)
         {
-
             VelocityComponent speedComponent =
                 (VelocityComponent)
                     entity.getComponent(VelocityComponent.class)
@@ -45,6 +43,7 @@ public class GhostSkill implements ISkillFunction{
                             () -> new MissingComponentException("VelocityComponent"));
             speedComponent.setYVelocity(normalSpeed);
             speedComponent.setXVelocity(normalSpeed);
+            isUsed=false;
         }
     }
 }
