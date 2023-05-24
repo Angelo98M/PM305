@@ -16,6 +16,7 @@ import ecs.damage.DamageType;
 import graphic.Animation;
 import level.elements.tile.Tile;
 import org.antlr.v4.runtime.atn.Transition;
+import starter.Game;
 import tools.Point;
 /**
  * The Monsters are unfriendly NPCs. It's entity in the ECS. This class helps to setup the Monsters with
@@ -38,6 +39,7 @@ public abstract class Monster extends Entity{
             @Override
             public void onDeath(Entity entity) {
                 QuestLog.getInstance().checkAllQuests(entity);
+
             }
         },dieAnimation, getHitAnimation);
         HitboxComponent hit = new HitboxComponent(this, new ICollide() {

@@ -21,8 +21,8 @@ import starter.Game;
  */
 
     public class Hero extends Entity {
-
-        private final int fireballCoolDown = 5;
+        private Skill melee;
+        private final int fireballCoolDown = 1;
         private final float xSpeed = 0.3f;
         private final float ySpeed = 0.3f;
         private Damage dmg = new Damage(2, DamageType.PHYSICAL,null);
@@ -36,6 +36,7 @@ import starter.Game;
         public Hero() {
             super();
             new PositionComponent(this);
+            setupSkillComponent();
             new HealthComponent(this, 10, new IOnDeathFunction() {
                 @Override
                 public void onDeath(Entity entity) {
@@ -44,16 +45,19 @@ import starter.Game;
             },AnimationBuilder.buildAnimation("character/knight/hit/knight_m_hit_anim_f0.png"),AnimationBuilder.buildAnimation("character/knight/hit/knight_m_hit_anim_f0.png"));
             new InventoryComponent(this,4);
             ((InventoryComponent)this.getComponent(InventoryComponent.class).get()).addItem(new Tasche());
-
+            setupMeleeAttack();
             setupVelocityComponent();
             setupAnimationComponent();
             setupHitboxComponent();
             PlayableComponent pc = new PlayableComponent(this);
             setupFireballSkill();
-            pc.setSkillSlot1(firstSkill);
-
+            pc.setSkillSlot1(melee);
+            ((SkillComponent)(this.getComponent(SkillComponent.class).get())).addSkill(melee);
         }
 
+        private void setupMeleeAttack(){
+            melee = new Skill(new MeleeAttack(),(int)1);
+        }
         private void setupVelocityComponent() {
             Animation moveRight = AnimationBuilder.buildAnimation(pathToRunRight);
             Animation moveLeft = AnimationBuilder.buildAnimation(pathToRunLeft);
@@ -86,6 +90,12 @@ import starter.Game;
 
         public void setDmg(int dmg){
             this.dmg = new Damage(dmg,DamageType.PHYSICAL,null);
+        }
+        public Skill getMelee(){
+            return melee;
+        }
+        public void setupSkillComponent(){
+            new SkillComponent(this);
         }
     }
 

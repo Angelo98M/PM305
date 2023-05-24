@@ -16,6 +16,7 @@ public class Skill {
         this.skillFunction = skillFunction;
         this.coolDownInFrames = (int) (coolDownInSeconds * Constants.FRAME_RATE);
         this.currentCoolDownInFrames = 0;
+        System.out.println(coolDownInFrames);
     }
 
     /**

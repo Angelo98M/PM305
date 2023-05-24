@@ -228,12 +228,12 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         entities.clear();
         getHero().ifPresent(this::placeOnLevelStart);
         spawnMonster();
-        setTraps();
+        /*setTraps();
         if(random.nextInt(0,100)<=50) {
             gameLogger.info("a Haunted Spirit has been Locked in this layer free him ");
             geist = new Ghost();
             grabstein = new Tombstone(((Ghost) geist));
-        }
+        }*/
         if(depth==1)
         {
             giver=new DungonQuestGiver();
@@ -412,7 +412,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         int x;
         Monster[] mons = new Monster[j];
         for (int i = 0; i<j; i++){
-            x = rnd.nextInt(3);
+            x = /*rnd.nextInt(3)*/1;
             if (x==0){
                 mons[i] = new Chort();
             }
