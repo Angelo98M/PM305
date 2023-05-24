@@ -15,7 +15,7 @@ public class GreatSword extends Swords {
     static Animation inventory = AnimationBuilder.buildAnimation("greatSword.png");
     static Animation world = AnimationBuilder.buildAnimation("greatSword.png");
     static String description = "Your mom bought you this for your grand Adventure";
-    static String itemName = "Sword";
+    static String itemName = "Greatsword";
     public GreatSword(){
         super(inventory,world,itemName,description);
         this.setOnCollect(new IOnCollect() {

@@ -27,6 +27,7 @@ import ecs.entities.Monsters.Imp;
 import ecs.entities.Traps.Arrow;
 import ecs.entities.Traps.Spikes;
 import ecs.items.ItemData;
+import ecs.items.Tasche;
 import ecs.items.WorldItemBuilder;
 import ecs.systems.*;
 import graphic.DungeonCamera;
@@ -196,7 +197,11 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             System.out.println("Aktuelle HP : "+ health.getCurrentHealthpoints() );
             System.out.println("Das Inventar enthaelt");
             for (ItemData s:inv){
-                System.out.println(s.getItemName());
+                System.out.print(s.getItemName());
+                if(s.getItemName()=="Tasche"){
+                    System.out.print(" "+(((Tasche)s).getAmount()+1));
+                }
+                System.out.println();
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
@@ -205,7 +210,14 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             if (inv.get(2).getDescription() == "A Potion that restores 3 HP"){
                 inv.get(2).triggerUse(getHero().get());
 
-            }}
+            }else if (inv.get(3).getDescription() == "Eine Tasche zum Transportieren von Heiltränken"){
+
+                Tasche bag = ((Tasche)((InventoryComponent)getHero().get().getComponent(InventoryComponent.class).get()).getItems().get(3)).getTasche();
+                if(!bag.isEmpty()) {
+                    bag.getConsumable();
+                }
+            }
+        }
     }
 
     @Override
