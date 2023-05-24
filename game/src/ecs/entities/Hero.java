@@ -34,6 +34,7 @@ import starter.Game;
         private final String pathToRunRight = "knight/runRight";
         private Skill firstSkill;
         private Skill secondSkill;
+        private Skill thirdSkill;
         private SkillComponent skillComp;
         private MagicPointsComponent MPC;
 
@@ -58,12 +59,15 @@ import starter.Game;
             PlayableComponent pc = new PlayableComponent(this);
             setupFireballSkill();
             setupGhostSkill();
+            setupHealSkill();
             setupXPComponent();
             skillComp=new SkillComponent(this);
             skillComp.addSkill(firstSkill);
             skillComp.addSkill(secondSkill);
+            skillComp.addSkill(thirdSkill);
             pc.setSkillSlot1(firstSkill);
             pc.setSkillSlot2(secondSkill);
+            pc.setSkillSlot3(thirdSkill);
 
         }
 
@@ -84,12 +88,20 @@ import starter.Game;
                     new Skill(
                             new FireballSkill(SkillTools::getCursorPositionAsPoint), fireballCoolDown,1);
         }
-
+    /**
+     * give hero the skill Ghost and Heal
+     */
         private void setupGhostSkill()
         {
             secondSkill=new Skill(new GhostSkill(0.5f),20,1);
         }
-
+    /**
+     * the amountOfHealing is set to 20%
+     */
+        private void setupHealSkill()
+        {
+            thirdSkill=new Skill(new HealSkill(0.2f),20,3);
+        }
         private void setupHitboxComponent() {
             HitboxComponent hit = new HitboxComponent(this, new ICollide() {
                 @Override
