@@ -1,11 +1,14 @@
 package ecs.components;
 
 import ecs.entities.Entity;
+import ecs.entities.Items.HealthPotion;
 import ecs.items.Empty;
 import ecs.items.ItemData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import ecs.items.Tasche;
 import logging.CustomLogLevel;
 
 /** Allows an Entity to carry Items */
@@ -45,6 +48,7 @@ import logging.CustomLogLevel;
             System.out.println(itemData.getClass().getSuperclass().getSimpleName());
             switch (itemData.getClass().getSuperclass().getSimpleName()){
                 case "Swords" :
+                    inventory.remove(0);
                     inventory.add(0,itemData);
                     inventoryLogger.log(
                         CustomLogLevel.INFO,
@@ -53,9 +57,10 @@ import logging.CustomLogLevel;
                             + "' was added to the inventory of entity '"
                             + entity.getClass().getSimpleName()
                             + "'.");
-                    inventory.set(0,itemData);
+
                     return true;
                 case "Armor" :
+                    inventory.remove(1);
                     inventory.add(1,itemData);
                     inventoryLogger.log(
                         CustomLogLevel.INFO,
@@ -64,7 +69,7 @@ import logging.CustomLogLevel;
                             + "' was added to the inventory of entity '"
                             + entity.getClass().getSimpleName()
                             + "'.");
-                    inventory.set(1, itemData);
+
                     return true;
                 case "Consumables" :
                     inventoryLogger.log(
@@ -76,13 +81,30 @@ import logging.CustomLogLevel;
                             + "'.");
 
                     if(inventory.get(2).getDescription()=="It's an Empty slot what do you expect me to say?") {
-                        /*if (inventory.get(3).getDescription() == "Eine Tasche zum Transportieren von Heiltränken") {
+                        if (inventory.get(3).getDescription() == "Eine Tasche zum Transportieren von Heiltränken") {
                             Tasche bag = ((Tasche) inventory.get(3));
+                            if (bag.getAmount()<4) {
+                                bag.addConsumable(new HealthPotion());
+                                return true;
+                            }
                         }
-                        }*/
+
                     }
-                    inventory.set(2,itemData);
+                    inventory.remove(2);
+                    inventory.add(2,itemData);
                     return true;
+                case "ItemData":
+                    System.out.println("woozie");
+                    inventoryLogger.log(
+                        CustomLogLevel.INFO,
+                        "Item '"
+                            + this.getClass().getSimpleName()
+                            + "' was added to the inventory of entity '"
+                            + entity.getClass().getSimpleName()
+                            + "'.");
+                    inventory.remove(3);
+                    inventory.add(3,itemData);
+
                     /*if (inventory.get(3).getClass()== Tasche.class){
                         Tasche tasche = (Tasche)inventory.get(3);
                         if(tasche.addConsumable(itemData) == false){
