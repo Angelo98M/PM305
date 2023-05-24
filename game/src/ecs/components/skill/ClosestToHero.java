@@ -25,7 +25,7 @@ public class ClosestToHero implements ITargetSelection{
         List<Entity> monster = new ArrayList<>();
 
         for (Entity current : all) {
-            System.out.println(current.getClass().getSuperclass().getSimpleName());
+
             if (current.getClass().getSuperclass().getSimpleName().equals("Monster")) {
                 monster.add(current);
 

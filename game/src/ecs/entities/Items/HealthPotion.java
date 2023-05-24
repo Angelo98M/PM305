@@ -19,18 +19,18 @@ public class HealthPotion extends Consumables {
     static String description = "A Potion that restores 3 HP";
 
     static IOnUse use = new IOnUse() {
-        @Override
-        public void onUse(Entity e, ItemData item) {
-            Game.getHero()
-                .ifPresent(
-                    hero -> {
-                        hero.getComponent(HealthComponent.class).ifPresent(
-                            (x) -> {
-                                ((HealthComponent) x)
-                                    .setCurrentHealthpoints(
-                                        ((HealthComponent)x).getCurrentHealthpoints()+3);
-                            }
-                        );
+                            @Override
+                            public void onUse(Entity e, ItemData item) {
+                                Game.getHero()
+                                    .ifPresent(
+                                        hero -> {
+                                            hero.getComponent(HealthComponent.class).ifPresent(
+                                                (x) -> {
+                                                    ((HealthComponent) x)
+                                                        .setCurrentHealthpoints(
+                                                            ((HealthComponent)x).getCurrentHealthpoints()+3);
+                                                }
+                                            );
                     });
             InventoryComponent inv = (InventoryComponent) Game.getHero().get().getComponent(InventoryComponent.class).get();
             inv.removeItem(item);

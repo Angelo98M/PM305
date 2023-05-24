@@ -18,6 +18,9 @@ public class PlayableComponent extends Component {
 
     private Skill skillSlot1;
     private Skill skillSlot2;
+    private Skill skillSlot3;
+
+    private Skill skillSlot4;
 
     /**
      * @param entity associated entity
@@ -29,6 +32,7 @@ public class PlayableComponent extends Component {
         playable = true;
         this.skillSlot1 = skillSlot1;
         this.skillSlot2 = skillSlot2;
+        this.skillSlot3 = skillSlot3;
     }
 
     /** {@inheritDoc} */
@@ -70,18 +74,36 @@ public class PlayableComponent extends Component {
     public void setSkillSlot2(Skill skillSlot2) {
         this.skillSlot2 = skillSlot2;
     }
+    /**
+     * @param skillSlot3 skill that will be on the first skillslot
+     */
 
+    public void setSkillSlot3(Skill skillSlot3) {
+        this.skillSlot3 = skillSlot3;
+    }
+    public void setSkillSlot4(Skill skillSlot4) {
+        this.skillSlot4 = skillSlot4;
+    }
     /**
      * @return skill on first skill slot
      */
     public Optional<Skill> getSkillSlot1() {
         return Optional.ofNullable(skillSlot1);
     }
-
     /**
      * @return skill on second skill slot
      */
     public Optional<Skill> getSkillSlot2() {
         return Optional.ofNullable(skillSlot2);
+    }
+    /**
+     * @return skill on second skill slot
+     */
+    public Optional<Skill> getSkillSlot3() {
+        return Optional.ofNullable(skillSlot3);
+    }
+
+    public Optional<Skill> getSkillSlot4() {
+        return Optional.ofNullable(skillSlot4);
     }
 }

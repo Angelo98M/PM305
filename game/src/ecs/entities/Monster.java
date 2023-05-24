@@ -11,6 +11,7 @@ import ecs.components.ai.idle.RadiusWalk;
 import ecs.components.ai.transition.ITransition;
 import ecs.components.ai.transition.RangeTransition;
 import ecs.components.collision.ICollide;
+import ecs.components.xp.XPComponent;
 import ecs.damage.Damage;
 import ecs.damage.DamageType;
 import graphic.Animation;
@@ -30,7 +31,7 @@ public abstract class Monster extends Entity{
     public Monster(float speed, Animation idleLeft, Animation idleRight, Animation runLeft, Animation runRight, IFightAI fight, IIdleAI idle, ITransition trans,Animation getHitAnimation, Animation dieAnimation,int maxHealth){
         super();
         PositionComponent pos = new PositionComponent(this);
-
+        new XPComponent(this,null,50);
         new AnimationComponent(this,idleLeft,idleRight);
         VelocityComponent vel = new VelocityComponent(this, speed, speed, runLeft, runRight);
         AIComponent ai = new AIComponent (this, fight, idle, trans);
@@ -42,6 +43,7 @@ public abstract class Monster extends Entity{
 
             }
         },dieAnimation, getHitAnimation);
+
         HitboxComponent hit = new HitboxComponent(this, new ICollide() {
             @Override
             public void onCollision(Entity a, Entity b, Tile.Direction from) {
@@ -51,5 +53,5 @@ public abstract class Monster extends Entity{
             }
         },
             (you, other, direction) -> System.out.println("HeroCollisionLeave")/*health.receiveHit(dmg)*/);
-}
+    }
 }

@@ -7,6 +7,8 @@ import ecs.components.PositionComponent;
 import ecs.components.VelocityComponent;
 import ecs.components.collision.ICollide;
 import ecs.components.skill.*;
+import ecs.components.xp.ILevelUp;
+import ecs.components.xp.XPComponent;
 import ecs.damage.Damage;
 import ecs.damage.DamageType;
 import ecs.items.Tasche;
@@ -21,8 +23,8 @@ import starter.Game;
  */
 
     public class Hero extends Entity {
-        private Skill melee;
-        private final int fireballCoolDown = 1;
+
+        private final int fireballCoolDown = 3;
         private final float xSpeed = 0.3f;
         private final float ySpeed = 0.3f;
         private Damage dmg = new Damage(2, DamageType.PHYSICAL,null);
@@ -30,14 +32,20 @@ import starter.Game;
         private final String pathToIdleRight = "knight/idleRight";
         private final String pathToRunLeft = "knight/runLeft";
         private final String pathToRunRight = "knight/runRight";
+        private Skill melee;
         private Skill firstSkill;
+        private Skill secondSkill;
+        private Skill thirdSkill;
+        private SkillComponent skillComp;
+        private MagicPointsComponent MPC;
+
 
         /** Entity with Components */
         public Hero() {
             super();
             new PositionComponent(this);
             setupSkillComponent();
-            new HealthComponent(this, 10, new IOnDeathFunction() {
+            new HealthComponent(this, 26, new IOnDeathFunction() {
                 @Override
                 public void onDeath(Entity entity) {
                     Game.GameOver();
@@ -49,14 +57,26 @@ import starter.Game;
             setupVelocityComponent();
             setupAnimationComponent();
             setupHitboxComponent();
+            MPC=setupMagicPointsComponent();
             PlayableComponent pc = new PlayableComponent(this);
             setupFireballSkill();
-            pc.setSkillSlot1(melee);
-            ((SkillComponent)(this.getComponent(SkillComponent.class).get())).addSkill(melee);
+
+            setupGhostSkill();
+            setupHealSkill();
+            setupXPComponent();
+            skillComp=new SkillComponent(this);
+            skillComp.addSkill(firstSkill);
+            skillComp.addSkill(secondSkill);
+            skillComp.addSkill(thirdSkill);
+            skillComp.addSkill(melee);
+            pc.setSkillSlot1(firstSkill);
+
+            pc.setSkillSlot4(melee);
+
         }
 
         private void setupMeleeAttack(){
-            melee = new Skill(new MeleeAttack(),(int)1);
+            melee = new Skill(new MeleeAttack(),(int)1,0);
         }
         private void setupVelocityComponent() {
             Animation moveRight = AnimationBuilder.buildAnimation(pathToRunRight);
@@ -73,9 +93,22 @@ import starter.Game;
         private void setupFireballSkill() {
             firstSkill =
                     new Skill(
-                            new FireballSkill(SkillTools::getCursorPositionAsPoint), fireballCoolDown);
+                            new FireballSkill(SkillTools::getCursorPositionAsPoint), fireballCoolDown,1);
         }
-
+    /**
+     * give hero the skill Ghost and Heal
+     */
+        private void setupGhostSkill()
+        {
+            secondSkill=new Skill(new GhostSkill(0.5f),20,1);
+        }
+    /**
+     * the amountOfHealing is set to 20%
+     */
+        private void setupHealSkill()
+        {
+            thirdSkill=new Skill(new HealSkill(0.2f),20,3);
+        }
         private void setupHitboxComponent() {
             HitboxComponent hit = new HitboxComponent(this, new ICollide() {
                 @Override
@@ -86,6 +119,39 @@ import starter.Game;
                 }
             },
                 (you, other, direction) -> System.out.println("HeroCollisionLeave")/*health.receiveHit(dmg)*/);
+        }
+        private MagicPointsComponent setupMagicPointsComponent()
+        {
+            return new MagicPointsComponent(this,10);
+        }
+        private void setupXPComponent()
+        {
+            new XPComponent(this, new ILevelUp() {
+                @Override
+                public void onLevelUp(long nexLevel) {
+                    System.out.println("Du bist nun Level: "+ nexLevel);
+                    if(nexLevel%5==0)
+                    {
+                        ((MagicPointsComponent)Game.getHero().get().getComponent(MagicPointsComponent.class).get()).addMP();
+                        HealthComponent HC=(HealthComponent)Game.getHero().get().getComponent(HealthComponent.class).get();
+                        HC.setMaximalHealthpoints(HC.getMaximalHealthpoints()+1);
+
+                    }
+                    else
+                    {
+                        HealthComponent HC=(HealthComponent)Game.getHero().get().getComponent(HealthComponent.class).get();
+                        HC.setMaximalHealthpoints(HC.getMaximalHealthpoints()+1);
+                    }
+                    if(nexLevel==5){
+                        ((PlayableComponent)(Game.getHero().get().getComponent(PlayableComponent.class).get())).setSkillSlot3(thirdSkill);
+                        System.out.println("Du hast den Heal skill erlernt !");
+                    }
+                    if(nexLevel==10){
+                        ((PlayableComponent)(Game.getHero().get().getComponent(PlayableComponent.class).get())).setSkillSlot2(secondSkill);
+                        System.out.println("Du hast den Ghost skill erlernt !");
+                    }
+                }
+            });
         }
 
         public void setDmg(int dmg){

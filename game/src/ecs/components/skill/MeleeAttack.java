@@ -3,6 +3,7 @@ package ecs.components.skill;
 import dslToGame.AnimationBuilder;
 import ecs.components.*;
 import ecs.components.collision.ICollide;
+import ecs.components.xp.XPComponent;
 import ecs.damage.Damage;
 import ecs.damage.DamageType;
 import ecs.entities.Entity;
@@ -16,7 +17,7 @@ public class MeleeAttack extends DamageProjectileSkill{
 
     private static String animationPath= "";
     private static float speed = 0.05f;
-    private static Damage dmg = new Damage(2, DamageType.PHYSICAL,null);
+    private static Damage dmg = new Damage(10, DamageType.PHYSICAL,null);
     private static Point size = new Point(0.5f,0.2f);
     private static ITargetSelection targetting = new ClosestToHero();
     private static float range = 0.5f;
@@ -68,6 +69,11 @@ public class MeleeAttack extends DamageProjectileSkill{
                     b.getComponent(HealthComponent.class)
                         .ifPresent(
                             hc -> {
+                                int health =((HealthComponent)hc).getCurrentHealthpoints();
+                                int damage =dmg.damageAmount();
+                                if (health-damage<=0){
+                                    ((XPComponent)(Game.getHero().get().getComponent(XPComponent.class).get())).addXP(((XPComponent)(b.getComponent(XPComponent.class).get())).getLootXP());
+                                }
                                 ((HealthComponent) hc).receiveHit(dmg);
                                 Game.removeEntity(projectile);
                             });

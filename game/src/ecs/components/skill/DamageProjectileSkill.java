@@ -73,11 +73,17 @@ public abstract class DamageProjectileSkill implements ISkillFunction {
         new HitboxComponent(
                 projectile, new Point(0.25f, 0.25f), projectileHitboxSize, collide, null);
     }
+
     public void updateDamage(int increase){
         projectileDamage = new Damage(projectileDamage.damageAmount()+increase, projectileDamage.damageType(),null);
     }
-    public void updateHitbox(float increase){
-        increase = (increase/10)+1;
-        projectileHitboxSize = new Point(projectileHitboxSize.toCoordinate().x*increase,projectileHitboxSize.toCoordinate().y*increase);
+    public void updateHitbox(float increase) {
+        increase = (increase / 10) + 1;
+        projectileHitboxSize = new Point(projectileHitboxSize.toCoordinate().x * increase, projectileHitboxSize.toCoordinate().y * increase);
+    }
+    @Override
+    public void skillAbilityReset(Entity entity) {
+
+
     }
 }
