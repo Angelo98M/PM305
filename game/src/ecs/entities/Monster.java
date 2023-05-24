@@ -11,6 +11,7 @@ import ecs.components.ai.idle.RadiusWalk;
 import ecs.components.ai.transition.ITransition;
 import ecs.components.ai.transition.RangeTransition;
 import ecs.components.collision.ICollide;
+import ecs.components.xp.XPComponent;
 import ecs.damage.Damage;
 import ecs.damage.DamageType;
 import graphic.Animation;

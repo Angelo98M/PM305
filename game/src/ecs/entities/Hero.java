@@ -30,6 +30,7 @@ import graphic.Animation;
         private final String pathToRunRight = "knight/runRight";
         private Skill firstSkill;
         private Skill secondSkill;
+        private Skill thirdSkill;
 
         /** Entity with Components */
         public Hero() {
@@ -49,6 +50,7 @@ import graphic.Animation;
             setupFireballSkill();
             pc.setSkillSlot1(firstSkill);
             pc.setSkillSlot2(secondSkill);
+            pc.setSkillSlot3(thirdSkill);
 
         }
 
@@ -70,9 +72,9 @@ import graphic.Animation;
                             new FireballSkill(SkillTools::getCursorPositionAsPoint), fireballCoolDown);
         }
         private void setupHealSkill(){
-            secondSkill =
+            thirdSkill=
                     new Skill(
-                            new Healskill(),healCoolDown);
+                            new HealSkill(0.2f),healCoolDown);
         }
 
         private void setupHitboxComponent() {
