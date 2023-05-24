@@ -7,6 +7,8 @@ import ecs.components.PositionComponent;
 import ecs.components.VelocityComponent;
 import ecs.components.collision.ICollide;
 import ecs.components.skill.*;
+import ecs.components.xp.ILevelUp;
+import ecs.components.xp.XPComponent;
 import ecs.damage.Damage;
 import ecs.damage.DamageType;
 import ecs.items.Tasche;
@@ -31,6 +33,10 @@ import starter.Game;
         private final String pathToRunLeft = "knight/runLeft";
         private final String pathToRunRight = "knight/runRight";
         private Skill firstSkill;
+        private Skill secondSkill;
+        private SkillComponent skillComp;
+        private MagicPointsComponent MPC;
+
 
         /** Entity with Components */
         public Hero() {
@@ -48,9 +54,16 @@ import starter.Game;
             setupVelocityComponent();
             setupAnimationComponent();
             setupHitboxComponent();
+            MPC=setupMagicPointsComponent();
             PlayableComponent pc = new PlayableComponent(this);
             setupFireballSkill();
+            setupGhostSkill();
+            setupXPComponent();
+            skillComp=new SkillComponent(this);
+            skillComp.addSkill(firstSkill);
+            skillComp.addSkill(secondSkill);
             pc.setSkillSlot1(firstSkill);
+            pc.setSkillSlot2(secondSkill);
 
         }
 
@@ -69,7 +82,12 @@ import starter.Game;
         private void setupFireballSkill() {
             firstSkill =
                     new Skill(
-                            new FireballSkill(SkillTools::getCursorPositionAsPoint), fireballCoolDown);
+                            new FireballSkill(SkillTools::getCursorPositionAsPoint), fireballCoolDown,1);
+        }
+
+        private void setupGhostSkill()
+        {
+            secondSkill=new Skill(new GhostSkill(0.5f),20,1);
         }
 
         private void setupHitboxComponent() {
@@ -82,6 +100,31 @@ import starter.Game;
                 }
             },
                 (you, other, direction) -> System.out.println("HeroCollisionLeave")/*health.receiveHit(dmg)*/);
+        }
+        private MagicPointsComponent setupMagicPointsComponent()
+        {
+            return new MagicPointsComponent(this,10);
+        }
+        private void setupXPComponent()
+        {
+            new XPComponent(this, new ILevelUp() {
+                @Override
+                public void onLevelUp(long nexLevel) {
+                    System.out.println("Du bist nun Level: "+ nexLevel);
+                    if(nexLevel%5==0)
+                    {
+                        ((MagicPointsComponent)Game.getHero().get().getComponent(MagicPointsComponent.class).get()).addMP();
+                        HealthComponent HC=(HealthComponent)Game.getHero().get().getComponent(HealthComponent.class).get();
+                        HC.setMaximalHealthpoints(HC.getMaximalHealthpoints()+1);
+
+                    }
+                    else
+                    {
+                        HealthComponent HC=(HealthComponent)Game.getHero().get().getComponent(HealthComponent.class).get();
+                        HC.setMaximalHealthpoints(HC.getMaximalHealthpoints()+1);
+                    }
+                }
+            });
         }
 
         public void setDmg(int dmg){

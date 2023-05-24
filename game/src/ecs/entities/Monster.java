@@ -43,5 +43,6 @@ public abstract class Monster extends Entity{
         },dieAnimation, getHitAnimation);
         HitboxComponent hit = new HitboxComponent(this, (you, other, direction) -> ((HealthComponent)other.getComponent(HealthComponent.class).get()).receiveHit(dmg),
             (you, other, direction) -> System.out.println("chortCollisionLeave")/*health.receiveHit(dmg)*/);
+        new XPComponent(this,null,50);
     }
 }
