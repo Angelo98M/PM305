@@ -48,4 +48,6 @@ public class SkillComponent extends Component {
     public void reduceAllCoolDowns() {
         for (Skill skill : skillSet) skill.reduceCoolDown();
     }
+
+    public void checkForSkillAbilityResets(){for (Skill skill : skillSet) skill.CheckSkillAbilityReset(entity);}
 }

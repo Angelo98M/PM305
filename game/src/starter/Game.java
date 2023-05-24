@@ -188,7 +188,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         manageEntitiesSets();
         getHero().ifPresent(this::loadNextLevelIfEntityIsOnEndTile);
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) togglePause();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) System.out.println(QuestLog.getInstance().printLog());
+        if (Gdx.input.isKeyJustPressed(Input.Keys.L)) System.out.println(QuestLog.getInstance().printLog());
         if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
             InventoryComponent inventory = ((InventoryComponent)getHero().get().getComponent(InventoryComponent.class).get());
             HealthComponent health = ((HealthComponent)getHero().get().getComponent(HealthComponent.class).get());

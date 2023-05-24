@@ -28,6 +28,8 @@ import starter.Game;
         private final String pathToRunLeft = "knight/runLeft";
         private final String pathToRunRight = "knight/runRight";
         private Skill firstSkill;
+        private Skill secondSkill;
+
 
         /** Entity with Components */
         public Hero() {
@@ -45,7 +47,10 @@ import starter.Game;
             setupHitboxComponent();
             PlayableComponent pc = new PlayableComponent(this);
             setupFireballSkill();
+            setupGhostSkill();
             pc.setSkillSlot1(firstSkill);
+           // pc.setSkillSlot2(secondSkill);
+
 
         }
 
@@ -65,6 +70,11 @@ import starter.Game;
             firstSkill =
                     new Skill(
                             new FireballSkill(SkillTools::getCursorPositionAsPoint), fireballCoolDown);
+        }
+
+        private void setupGhostSkill()
+        {
+            secondSkill=new Skill(new GhostSkill(0.5f),10);
         }
 
         private void setupHitboxComponent() {

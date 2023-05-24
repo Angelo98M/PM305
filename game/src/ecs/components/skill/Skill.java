@@ -25,6 +25,7 @@ public class Skill {
      */
     public void execute(Entity entity) {
         if (!isOnCoolDown()) {
+            System.out.println("go");
             skillFunction.execute(entity);
             activateCoolDown();
         }
@@ -46,4 +47,6 @@ public class Skill {
     public void reduceCoolDown() {
         currentCoolDownInFrames = Math.max(0, --currentCoolDownInFrames);
     }
+
+    public void CheckSkillAbilityReset(Entity entity){ skillFunction.skillAbilityReset(entity);}
 }
