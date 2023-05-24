@@ -1,2 +1,2 @@
-package ecs.components;public class MagicPoitns {
+package ecs.components;public class MagicPointsComponent {
 }
