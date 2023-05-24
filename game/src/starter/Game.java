@@ -451,7 +451,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
      * Resets the level and other components
      */
     public void neustart(){
-        depth=0;
+        depth = 0;
         hero = new Hero();
         ((InventoryComponent)Game.getHero().get().getComponent(InventoryComponent.class).get()).setupInventory();
         QuestLog.getInstance().restar();

@@ -17,7 +17,6 @@ public class Skill {
         this.coolDownInFrames = (int) (coolDownInSeconds * Constants.FRAME_RATE);
         this.currentCoolDownInFrames = 0;
     }
-
     /**
      * Execute the method of this skill
      *
@@ -47,3 +46,4 @@ public class Skill {
         currentCoolDownInFrames = Math.max(0, --currentCoolDownInFrames);
     }
 }
+

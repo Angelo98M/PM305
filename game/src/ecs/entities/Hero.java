@@ -9,7 +9,7 @@ import ecs.components.skill.*;
 import ecs.damage.Damage;
 import ecs.damage.DamageType;
 import graphic.Animation;
-import starter.Game;
+
 
 
 /**
@@ -20,6 +20,7 @@ import starter.Game;
     public class Hero extends Entity {
 
         private final int fireballCoolDown = 5;
+        private final int healCoolDown =20 ;
         private final float xSpeed = 0.3f;
         private final float ySpeed = 0.3f;
         private Damage dmg = new Damage(2, DamageType.PHYSICAL,null);
@@ -28,6 +29,7 @@ import starter.Game;
         private final String pathToRunLeft = "knight/runLeft";
         private final String pathToRunRight = "knight/runRight";
         private Skill firstSkill;
+        private Skill secondSkill;
 
         /** Entity with Components */
         public Hero() {
@@ -46,6 +48,7 @@ import starter.Game;
             PlayableComponent pc = new PlayableComponent(this);
             setupFireballSkill();
             pc.setSkillSlot1(firstSkill);
+            pc.setSkillSlot2(secondSkill);
 
         }
 
@@ -65,6 +68,11 @@ import starter.Game;
             firstSkill =
                     new Skill(
                             new FireballSkill(SkillTools::getCursorPositionAsPoint), fireballCoolDown);
+        }
+        private void setupHealSkill(){
+            secondSkill =
+                    new Skill(
+                            new Healskill(),healCoolDown);
         }
 
         private void setupHitboxComponent() {
