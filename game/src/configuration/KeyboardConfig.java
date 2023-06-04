@@ -26,5 +26,7 @@ public class KeyboardConfig {
         new ConfigKey<>(new String[] {"skill", "third"}, new ConfigIntValue(Input.Keys.NUM_1));
     public static final ConfigKey<Integer> FOURTH_SKILL =
         new ConfigKey<>(new String[] {"skill", "fourth"}, new ConfigIntValue(Input.Keys.SPACE));
+    public static final ConfigKey<Integer> INTERACTION_SHOP =
+        new ConfigKey<>(new String[] {"interaction", "shop"}, new ConfigIntValue(Input.Keys.T));
 }
 
