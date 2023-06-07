@@ -5,7 +5,7 @@ import ecs.components.*;
 import graphic.Animation;
 import starter.Game;
 
-/** Class for the Entity NpcQuestion */
+/** Class for the Entity NpcPenguin */
 public class NpcPenguin extends Entity {
     private Animation idle =
             AnimationBuilder.buildAnimation(

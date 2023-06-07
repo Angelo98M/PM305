@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import controller.ScreenController;
 import ecs.components.InventoryComponent;
@@ -15,7 +16,7 @@ import starter.Game;
 import tools.Constants;
 import tools.Point;
 
-/** Class for the Puzzle menu which gives a */
+/** Class for the Puzzle menu which asks a question that has to be answered */
 public class PuzzleMenu<T extends Actor> extends ScreenController<T> {
     public String answerFromHero;
     private ScreenText screenText;
@@ -43,10 +44,12 @@ public class PuzzleMenu<T extends Actor> extends ScreenController<T> {
         setupQuestions();
         setupAnswers();
         setupRegex();
-        /** creates a ScreenText, screenInput, ScreenButton´s for the player to interact with */
+        /**
+         * creates a ScreenText,screenInput, screenButton´s for the player to interact with
+         */
         screenText =
                 new ScreenText(
-                        "beantworte eine frage und bekomme eine Belohnung",
+                        "beantworte eine frage und bekomme einen Heiltrank",
                         new Point(0, 0),
                         3,
                         new LabelStyleBuilder(FontBuilder.DEFAULT_FONT)
@@ -84,7 +87,11 @@ public class PuzzleMenu<T extends Actor> extends ScreenController<T> {
                                     }
                                 }
                             }
-                        });
+
+                        }, new TextButtonStyleBuilder(FontBuilder.DEFAULT_FONT)
+                                    .setFontColor(Color.WHITE)
+                                    .build());
+
         screenButton.setPosition(
                 Constants.WINDOW_WIDTH / 2 - screenButton.getWidth(),
                 10,
@@ -99,8 +106,11 @@ public class PuzzleMenu<T extends Actor> extends ScreenController<T> {
                                 if (isPressed()) {
                                     Game.toggleRaetsel();
                                 }
+
                             }
-                        });
+                        }, new TextButtonStyleBuilder(FontBuilder.DEFAULT_FONT)
+                                    .setFontColor(Color.WHITE)
+                                    .build());
         screenButtonleave.setPosition(
                 Constants.WINDOW_WIDTH / 2 + screenButton.getWidth(),
                 10,
@@ -131,10 +141,11 @@ public class PuzzleMenu<T extends Actor> extends ScreenController<T> {
                         (x) -> {
                             ((InventoryComponent) x).addItem((new HealthPotion()));
                         });
+
     }
     /** if the player comes to the next NpcPenguin the question will be reset */
     public void reset() {
-        screenText.setText("beantworte eine frage und bekomme eine Belohnung");
+        screenText.setText("beantworte eine frage und bekomme einen Heiltrank");
         currendAnswer = "";
         currendregex = "none";
         screenInput.setText("Drücke Start");
