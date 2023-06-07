@@ -162,8 +162,8 @@ public class PuzzleMenu<T extends Actor> extends ScreenController<T> {
     private void setupAnswers() {
         answers = new String[3];
         answers[0] = "Acht";
-        answers[1] = "Green";
-        answers[2] = "Eleven";
+        answers[1] = "Grün";
+        answers[2] = "Elf";
     }
     /** the regex for the game */
     private void setupRegex() {
