@@ -4,7 +4,6 @@ import dslToGame.AnimationBuilder;
 import ecs.components.*;
 import ecs.components.collision.ICollide;
 import ecs.damage.Damage;
-import ecs.damage.DamageType;
 import ecs.entities.Entity;
 import graphic.Animation;
 import starter.Game;
@@ -74,16 +73,22 @@ public abstract class DamageProjectileSkill implements ISkillFunction {
                 projectile, new Point(0.25f, 0.25f), projectileHitboxSize, collide, null);
     }
 
-    public void updateDamage(int increase){
-        projectileDamage = new Damage(projectileDamage.damageAmount()+increase, projectileDamage.damageType(),null);
+    public void updateDamage(int increase) {
+        projectileDamage =
+                new Damage(
+                        projectileDamage.damageAmount() + increase,
+                        projectileDamage.damageType(),
+                        null);
     }
+
     public void updateHitbox(float increase) {
         increase = (increase / 10) + 1;
-        projectileHitboxSize = new Point(projectileHitboxSize.toCoordinate().x * increase, projectileHitboxSize.toCoordinate().y * increase);
+        projectileHitboxSize =
+                new Point(
+                        projectileHitboxSize.toCoordinate().x * increase,
+                        projectileHitboxSize.toCoordinate().y * increase);
     }
+
     @Override
-    public void skillAbilityReset(Entity entity) {
-
-
-    }
+    public void skillAbilityReset(Entity entity) {}
 }

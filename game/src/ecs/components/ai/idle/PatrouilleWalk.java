@@ -54,12 +54,10 @@ public class PatrouilleWalk implements IIdleAI {
         this.numberCheckpoints = numberCheckpoints;
         this.pauseFrames = pauseTime / (1000 / Constants.FRAME_RATE);
         this.mode = mode;
-
     }
 
     private void init(Entity entity) {
         initialized = true;
-
 
         PositionComponent position =
                 (PositionComponent)
@@ -90,7 +88,6 @@ public class PatrouilleWalk implements IIdleAI {
             }
             maxTries++;
         }
-
     }
 
     @Override
@@ -165,7 +162,8 @@ public class PatrouilleWalk implements IIdleAI {
             default -> {}
         }
     }
-    public Tile getSpawnTile(){
+
+    public Tile getSpawnTile() {
         return checkpoints.get(0);
     }
 }

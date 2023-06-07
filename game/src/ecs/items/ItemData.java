@@ -1,11 +1,8 @@
 package ecs.items;
 
 import configuration.ItemConfig;
-import ecs.components.AnimationComponent;
-import ecs.components.HitboxComponent;
 import ecs.components.InventoryComponent;
 import ecs.components.ItemComponent;
-import ecs.components.PositionComponent;
 import ecs.components.stats.DamageModifier;
 import ecs.entities.Entity;
 import graphic.Animation;
@@ -166,11 +163,8 @@ public class ItemData {
     }
 
     private static void defaultDrop(Entity who, ItemData which, Point position) {
-        Entity droppedItem = new Entity();
-        new PositionComponent(droppedItem, position);
-        new AnimationComponent(droppedItem, which.getWorldTexture());
-        HitboxComponent component = new HitboxComponent(droppedItem);
-        component.setiCollideEnter((a, b, direction) -> which.triggerCollect(a, b));
+        WorldItemBuilder itemBuilder = new WorldItemBuilder();
+        itemBuilder.buildWorldItem(which, position);
     }
 
     private static void defaultCollect(Entity worldItem, Entity whoCollected) {

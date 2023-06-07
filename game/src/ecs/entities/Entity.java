@@ -51,5 +51,7 @@ public class Entity {
     public Optional<Component> getComponent(Class klass) {
         return Optional.ofNullable(components.get(klass));
     }
-    public void OnDelete(){};
+
+    public void OnDelete() {}
+    ;
 }

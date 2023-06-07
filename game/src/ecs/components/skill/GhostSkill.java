@@ -4,46 +4,47 @@ import ecs.components.MissingComponentException;
 import ecs.components.VelocityComponent;
 import ecs.entities.Entity;
 
-public class GhostSkill implements ISkillFunction{
+public class GhostSkill implements ISkillFunction {
 
-    private boolean isUsed=false;
+    private boolean isUsed = false;
     private long start;
     private float speedGain;
     private float normalSpeed;
 
-    public GhostSkill(float speedGain)
-    {
-        this.speedGain=speedGain;
+    public GhostSkill(float speedGain) {
+        this.speedGain = speedGain;
     }
+
     @Override
     public void execute(Entity entity) {
 
         VelocityComponent speedComponent =
-            (VelocityComponent)
-                entity.getComponent(VelocityComponent.class)
-                    .orElseThrow(
-                        () -> new MissingComponentException("VelocityComponent"));
+                (VelocityComponent)
+                        entity.getComponent(VelocityComponent.class)
+                                .orElseThrow(
+                                        () -> new MissingComponentException("VelocityComponent"));
 
-        normalSpeed= speedComponent.getXVelocity();
-        float newSpeed=normalSpeed*speedGain+normalSpeed;
+        normalSpeed = speedComponent.getXVelocity();
+        float newSpeed = normalSpeed * speedGain + normalSpeed;
         speedComponent.setXVelocity(newSpeed);
         speedComponent.setYVelocity(newSpeed);
-        isUsed=true;
-        start=System.nanoTime();
+        isUsed = true;
+        start = System.nanoTime();
     }
 
     @Override
     public void skillAbilityReset(Entity entity) {
-        if(isUsed==true&&(System.nanoTime()-start)/1e9>=5)
-        {
+        if (isUsed == true && (System.nanoTime() - start) / 1e9 >= 5) {
             VelocityComponent speedComponent =
-                (VelocityComponent)
-                    entity.getComponent(VelocityComponent.class)
-                        .orElseThrow(
-                            () -> new MissingComponentException("VelocityComponent"));
+                    (VelocityComponent)
+                            entity.getComponent(VelocityComponent.class)
+                                    .orElseThrow(
+                                            () ->
+                                                    new MissingComponentException(
+                                                            "VelocityComponent"));
             speedComponent.setYVelocity(normalSpeed);
             speedComponent.setXVelocity(normalSpeed);
-            isUsed=false;
+            isUsed = false;
         }
     }
 }
