@@ -2,9 +2,10 @@ package ecs.components.skill;
 
 import ecs.components.MagicPointsComponent;
 import ecs.entities.Entity;
+import java.io.Serializable;
 import tools.Constants;
 
-public class Skill {
+public class Skill implements Serializable {
 
     private ISkillFunction skillFunction;
     private int coolDownInFrames;
@@ -14,11 +15,11 @@ public class Skill {
     /**
      * @param skillFunction Function of this skill
      */
-    public Skill(ISkillFunction skillFunction, float coolDownInSeconds,int cost) {
+    public Skill(ISkillFunction skillFunction, float coolDownInSeconds, int cost) {
         this.skillFunction = skillFunction;
         this.coolDownInFrames = (int) (coolDownInSeconds * Constants.FRAME_RATE);
         this.currentCoolDownInFrames = 0;
-        this.cost=cost;
+        this.cost = cost;
     }
     /**
      * Execute the method of this skill
@@ -27,21 +28,19 @@ public class Skill {
      */
     public void execute(Entity entity) {
 
-        if (!isOnCoolDown())
-        {
-            if(((MagicPointsComponent)entity.getComponent(MagicPointsComponent.class).get()).useMp(cost))
-            {
+        if (!isOnCoolDown()) {
+            if (((MagicPointsComponent) entity.getComponent(MagicPointsComponent.class).get())
+                    .useMp(cost)) {
                 skillFunction.execute(entity);
                 activateCoolDown();
-            }
-            else
-            {
+            } else {
                 System.out.println("du Hast nicht genug MP um diesen Skill zu casten");
             }
-        }
-        else if(!skillFunction.getClass().equals(MeleeAttack.class))
-        {
-            System.out.println("Der skill ist noch: "+ currentCoolDownInFrames/ Constants.FRAME_RATE +" sekunden auf CoolDown");
+        } else if (!skillFunction.getClass().equals(MeleeAttack.class)) {
+            System.out.println(
+                    "Der skill ist noch: "
+                            + currentCoolDownInFrames / Constants.FRAME_RATE
+                            + " sekunden auf CoolDown");
         }
     }
 
@@ -62,9 +61,12 @@ public class Skill {
         currentCoolDownInFrames = Math.max(0, --currentCoolDownInFrames);
     }
 
-    /** checks if there is any duratuon effects that can be reseted
+    /**
+     * checks if there is any duratuon effects that can be reseted
+     *
      * @param entity entity which uses the skill
      */
-    public void CheckSkillAbilityReset(Entity entity){ skillFunction.skillAbilityReset(entity);}
+    public void CheckSkillAbilityReset(Entity entity) {
+        skillFunction.skillAbilityReset(entity);
+    }
 }
-

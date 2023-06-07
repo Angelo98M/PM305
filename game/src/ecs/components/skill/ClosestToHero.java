@@ -1,22 +1,19 @@
 package ecs.components.skill;
 
+import static java.lang.Math.sqrt;
+
 import ecs.components.PositionComponent;
 import ecs.entities.Entity;
-import ecs.entities.Monster;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import starter.Game;
 import tools.Point;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static java.lang.Math.sqrt;
-import static starter.Game.getEntities;
-
-public class ClosestToHero implements ITargetSelection{
+public class ClosestToHero implements ITargetSelection {
     /**
      * Calculates the shortest path to the closest Monster by using pythagorean theorem
+     *
      * @return the Point of the closest Enemy
      */
     @Override
@@ -28,10 +25,11 @@ public class ClosestToHero implements ITargetSelection{
 
             if (current.getClass().getSuperclass().getSimpleName().equals("Monster")) {
                 monster.add(current);
-
             }
         }
-        PositionComponent heroPos = (PositionComponent) Game.getHero().get().getComponent(PositionComponent.class).get();
+        PositionComponent heroPos =
+                (PositionComponent)
+                        Game.getHero().get().getComponent(PositionComponent.class).get();
         PositionComponent currentPos;
         PositionComponent closestPos = null;
         float heroPosX = heroPos.getPosition().x;
@@ -42,11 +40,14 @@ public class ClosestToHero implements ITargetSelection{
         float distanceY;
         float distance;
         float minDistance = 999;
-        if(monster.isEmpty()){System.out.println("Nice try Guy!");}
-        if(!monster.isEmpty()) {
+        if (monster.isEmpty()) {
+            System.out.println("Nice try Guy!");
+        }
+        if (!monster.isEmpty()) {
             for (Entity current : monster) {
                 if (current.getComponent(PositionComponent.class).isPresent()) {
-                    currentPos = (PositionComponent) current.getComponent(PositionComponent.class).get();
+                    currentPos =
+                            (PositionComponent) current.getComponent(PositionComponent.class).get();
                     currentPosX = currentPos.getPosition().x;
                     currentPosY = currentPos.getPosition().y;
 
@@ -58,15 +59,14 @@ public class ClosestToHero implements ITargetSelection{
                             minDistance = distance;
                             closestPos = currentPos;
                         }
-
                     }
-
                 }
-
             }
         }
 
-        if (closestPos == null) {return new Point(heroPosX + 3, heroPosY+3);}
+        if (closestPos == null) {
+            return new Point(heroPosX + 3, heroPosY + 3);
+        }
         return closestPos.getPosition();
     }
 }

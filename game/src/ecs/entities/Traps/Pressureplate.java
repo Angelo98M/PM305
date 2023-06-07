@@ -14,34 +14,43 @@ public class Pressureplate extends Traps {
 
     public Pressureplate(Arrow arrow) {
         super();
-        new AnimationComponent(this,AnimationBuilder.buildAnimation("dungeon/Traps/PressurePlate/PressurePlate.png"),AnimationBuilder.buildAnimation("dungeon/Traps/PressurePlate/PressurePlate.png"));
+        new AnimationComponent(
+                this,
+                AnimationBuilder.buildAnimation("dungeon/Traps/PressurePlate/PressurePlate.png"),
+                AnimationBuilder.buildAnimation("dungeon/Traps/PressurePlate/PressurePlate.png"));
         new PositionComponent(this);
-        new HitboxComponent(this,
-            new ICollide() {
-                @Override
-                public void onCollision(Entity a, Entity b, Tile.Direction from) {
-                    PositionComponent pos =
-                        (PositionComponent)
-                            a.getComponent(PositionComponent.class)
-                                .orElseThrow(
-                                    () -> new MissingComponentException("VelocityComponent"));
+        new HitboxComponent(
+                this,
+                new ICollide() {
+                    @Override
+                    public void onCollision(Entity a, Entity b, Tile.Direction from) {
+                        PositionComponent pos =
+                                (PositionComponent)
+                                        a.getComponent(PositionComponent.class)
+                                                .orElseThrow(
+                                                        () ->
+                                                                new MissingComponentException(
+                                                                        "VelocityComponent"));
 
-                    VelocityComponent velo =
-                        (VelocityComponent)
-                            arrow.getComponent(VelocityComponent.class)
-                                .orElseThrow(
-                                    () -> new MissingComponentException("VelocityComponent"));
-                    velo.setCurrentXVelocity(arrow.getxSpeed());
-                    velo.setCurrentYVelocity(arrow.getySpeed());
-                    if(!arrow.getComponent(AIComponent.class).isPresent()) {
+                        VelocityComponent velo =
+                                (VelocityComponent)
+                                        arrow.getComponent(VelocityComponent.class)
+                                                .orElseThrow(
+                                                        () ->
+                                                                new MissingComponentException(
+                                                                        "VelocityComponent"));
+                        velo.setCurrentXVelocity(arrow.getxSpeed());
+                        velo.setCurrentYVelocity(arrow.getySpeed());
+                        if (!arrow.getComponent(AIComponent.class).isPresent()) {
 
-                        new AIComponent(arrow, new CollideAI(0), new toPointAI(arrow.getPosition(), arrow.getDestination()), new RangeTransition(0f));
+                            new AIComponent(
+                                    arrow,
+                                    new CollideAI(0),
+                                    new toPointAI(arrow.getPosition(), arrow.getDestination()),
+                                    new RangeTransition(0f));
+                        }
                     }
-                }
-            },
-            (you, other, direction) -> System.out.println("pressureplatCollisionLeave"));
-
+                },
+                (you, other, direction) -> System.out.println("pressureplatCollisionLeave"));
     }
-
-
 }

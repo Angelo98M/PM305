@@ -1,11 +1,12 @@
 package ecs.items;
 
 import graphic.Animation;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
 /** Generator which creates a random ItemData based on the Templates prepared. */
-public class ItemDataGenerator {
+public class ItemDataGenerator implements Serializable {
     private static final List<String> missingTexture = List.of("animation/missingTexture.png");
 
     private List<ItemData> templates =

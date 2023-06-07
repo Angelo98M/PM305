@@ -9,12 +9,13 @@ import ecs.components.PositionComponent;
 import ecs.components.stats.DamageModifier;
 import ecs.entities.Entity;
 import graphic.Animation;
+import java.io.Serializable;
 import java.util.List;
 import starter.Game;
 import tools.Point;
 
 /** A Class which contains the Information of a specific Item. */
-public class ItemData {
+public class ItemData implements Serializable {
     private ItemType itemType;
     private Animation inventoryTexture;
     private Animation worldTexture;
