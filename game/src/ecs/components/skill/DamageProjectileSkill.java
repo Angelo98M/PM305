@@ -6,10 +6,11 @@ import ecs.components.collision.ICollide;
 import ecs.damage.Damage;
 import ecs.entities.Entity;
 import graphic.Animation;
+import java.io.Serializable;
 import starter.Game;
 import tools.Point;
 
-public abstract class DamageProjectileSkill implements ISkillFunction {
+public abstract class DamageProjectileSkill implements ISkillFunction, Serializable {
 
     private String pathToTexturesOfProjectile;
     private float projectileSpeed;

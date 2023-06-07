@@ -2,10 +2,14 @@ package ecs.Quests;
 
 import ecs.entities.Entity;
 import ecs.entities.Hero;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestLog {
+
+public class QuestLog implements Serializable {
+
+
     /** The Questlog holds on to all the Quest the Player currently has and mange them * */
     private Hero hero;
 

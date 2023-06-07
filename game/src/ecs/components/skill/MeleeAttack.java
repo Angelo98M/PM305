@@ -13,13 +13,14 @@ import graphic.Animation;
 import starter.Game;
 import tools.Point;
 
-/** */
+
 public class MeleeAttack extends DamageProjectileSkill {
 
     private static String animationPath = "";
     private static float speed = 0.05f;
     private static Damage dmg = new Damage(10, DamageType.PHYSICAL, null);
     private static Point size = new Point(0.5f, 0.3f);
+
     private static ITargetSelection targetting = new ClosestToHero();
     private static float range = 0.6f;
 
@@ -157,12 +158,10 @@ public class MeleeAttack extends DamageProjectileSkill {
         float directionX = hero.x - target.x;
         float directionY = hero.y - target.y;
         float hypothenuse = (float) sqrt((directionX * directionX + directionY * directionY));
-
         if (hypothenuse == 0) {
             hypothenuse = 1;
         }
         double arc = Math.sin((directionY / hypothenuse));
-
         if (directionX == 0) {
             if (directionY < 0) {
                 animationPath = "character/knight/attack/north/north";
@@ -203,7 +202,9 @@ public class MeleeAttack extends DamageProjectileSkill {
                 if (arc < 0.4) {
                     animationPath = "character/knight/attack/east";
                 } else if (arc > 0.80) {
+//
                     animationPath = "character/knight/attack/south/south";
+
                 } else if (arc <= 0.80 && arc >= 0.4) {
                     animationPath = "character/knight/attack/southeast";
                 }

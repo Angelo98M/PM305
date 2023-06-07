@@ -3,6 +3,8 @@ package starter;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import static logging.LoggerConfig.initBaseLogger;
 
+import SaveManager.GameSave;
+import SaveManager.SaveManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
@@ -33,6 +35,9 @@ import graphic.Painter;
 import graphic.hud.PauseMenu;
 import graphic.hud.gameOverScreen;
 import java.io.IOException;
+import graphic.hud.PuzzleMenu;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Logger;
 import level.IOnLevelLoader;
@@ -87,19 +92,25 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     private static Entity hero;
     private Logger gameLogger;
     private static Entity monster;
-    private static WorldItemBuilder itemBuilder = new WorldItemBuilder();
-    private static Entity traps;
 
+    private static WorldItemBuilder itemBuilder = new WorldItemBuilder();
+
+    private static Entity npcQuestion;
+    private static PuzzleMenu rs;
+    private static Boolean puzzle = false;
+
+    private static Entity traps;
     private static Entity geist;
     private static Entity grabstein;
     private int countUpdatePerSecond = 0;
     private int geistInvisiblTime = 5;
     private DungonQuestGiver giver;
-    private Random random = new Random();
 
     private static int depth = 0;
-
     private Random rnd = new Random();
+    private static GameSave save;
+    private static String fileLoaction = "save/entities.txt";
+    private boolean hasLoadat = false;
 
     public static void main(String[] args) {
         // start the game
@@ -136,10 +147,12 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     private void updatePerSecond() {
         if (getEntities().contains(geist)
                 && ((Ghost) geist).isVisibil()
-                && random.nextInt(0, 100) <= 10) {
+
+                && rnd.nextInt(0, 100) <= 10) {
             gameLogger.info("The Ghost is Disapperd but you can still feel his presents");
             ((Ghost) geist).SetInvisibil();
-            geistInvisiblTime = random.nextInt(2, 7);
+            geistInvisiblTime = rnd.nextInt(2, 7);
+
         }
         if (getEntities().contains(geist)
                 && !((Ghost) geist).isVisibil()
@@ -166,8 +179,32 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         controller.add(pauseMenu);
         hero = new Hero();
 
+        if (Files.exists(Paths.get(fileLoaction)) && depth == 0) {
+            try {
+                save = SaveManager.readObject(fileLoaction);
+            } catch (IOException | ClassNotFoundException e) {
+                gameLogger.info("Speicherstand konnte nicht geladen werden");
+            } finally {
+                if (save != null) {
+                    depth = save.getDepth();
+                    ((Hero) hero).LoadHero(save);
+                    if (hasLevelgohst()) {
+                        geist = new Ghost();
+                        grabstein = new Tombstone((Ghost) geist);
+                    }
+                    gameLogger.info("Speicherstand wurde erfolgreich geladen");
+                    hasLoadat = true;
+                }
+            }
+        }
+
+        rs = new PuzzleMenu<>();
+        controller.add(rs);
+
+
         levelAPI = new LevelAPI(batch, painter, new WallGenerator(new RandomWalkGenerator()), this);
         levelAPI.loadLevel(LEVELSIZE);
+
         createSystems();
     }
 
@@ -201,23 +238,25 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             System.out.println("Das Inventar enthaelt");
             for (ItemData s : inv) {
                 System.out.print(s.getItemName());
-                if (s.getItemName() == "Tasche") {
+                if (s.getItemName().equals("Tasche")) {
                     System.out.print(" " + (((Tasche) s).getAmount() + 1));
                 }
                 System.out.println();
             }
+            System.out.println(depth);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
             InventoryComponent inventory =
                     ((InventoryComponent)
                             getHero().get().getComponent(InventoryComponent.class).get());
             List<ItemData> inv = inventory.getItems();
-            if (inv.get(2).getDescription() == "A Potion that restores 3 HP") {
+
+            if (inv.get(2).getDescription().equals("A Potion that restores 3 HP")) {
                 inv.get(2).triggerUse(getHero().get());
 
-            } else if (inv.get(3).getDescription()
-                    == "Eine Tasche zum Transportieren von Heiltränken") {
-
+            } else if (inv.get(3)
+                    .getDescription()
+                    .equals("Eine Tasche zum Transportieren von Heiltränken")) {
                 Tasche bag =
                         ((Tasche)
                                         ((InventoryComponent)
@@ -238,12 +277,14 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
 
     @Override
     public void onLevelLoad() {
-        depth++;
-
         currentLevel = levelAPI.getCurrentLevel();
+        if (depth == 0 || !hasLoadat) {
+            depth++;
+        }
         entities.clear();
         getHero().ifPresent(this::placeOnLevelStart);
         spawnMonster();
+        spawnNpcQuestion();
 
         // setTraps();
         /*if(random.nextInt(0,100)<=50) {
@@ -268,6 +309,13 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         }
         itemBuilder.buildWorldItem(new HealthPotion());
         QuestLog.getInstance().checkAllQuests();
+        save = new GameSave();
+        try {
+            SaveManager.writeObject(save, fileLoaction);
+        } catch (IOException | ClassNotFoundException e) {
+            gameLogger.info("es konnte nicht gespeichert werden");
+        }
+        hasLoadat = false;
     }
 
     private void manageEntitiesSets() {
@@ -326,12 +374,26 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     /** Toggle between pause and run */
     public static void togglePause() {
         paused = !paused;
-        if (systems != null) {
-            systems.forEach(ECS_System::toggleRun);
-        }
-        if (pauseMenu != null) {
+        freeze();
+
+        if (pauseMenu != null && !puzzle) {
             if (paused) pauseMenu.showMenu();
             else pauseMenu.hideMenu();
+        }
+    }
+
+    public static void toggleRaetsel() {
+        puzzle = !puzzle;
+        freeze();
+        if (rs != null) {
+            if (puzzle) rs.showMenu();
+            else rs.hideMenu();
+        }
+    }
+
+    public static void freeze() {
+        if (systems != null) {
+            systems.forEach(ECS_System::toggleRun);
         }
     }
 
@@ -381,9 +443,8 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     public static Optional<Entity> getHero() {
         return Optional.ofNullable(hero);
     }
-
-    public static Optional<Entity> getChort() {
-        return Optional.ofNullable(monster);
+    public static Optional<Entity> getnpcQuestion() {
+        return Optional.ofNullable(npcQuestion);
     }
 
     /**
@@ -414,7 +475,6 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     }
 
     private void setStart(Entity monster) {
-
         entities.add(monster);
         PositionComponent pc =
                 (PositionComponent)
@@ -444,7 +504,12 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             setStart(mons[i]);
         }
     }
+    private void spawnNpcQuestion() {
+        if (depth == 1) {
+            npcQuestion = new NpcPenguin();
+        }
 
+    }
     private void createSystems() {
         new VelocitySystem();
         new DrawSystem(painter);
@@ -465,9 +530,21 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         new Arrow();
     }
 
+    public static Boolean hasLevelgohst() {
+        return entities.contains(geist);
+    }
+
     /** Implementing Gameover Method */
     public static void GameOver() {
-        gameOver = new gameOverScreen();
+        if (Files.exists(Paths.get(fileLoaction))) {
+            try {
+                Files.delete(Paths.get(fileLoaction));
+            } catch (IOException e) {
+                System.out.println(e.getCause());
+            }
+            save = null;
+        }
+        // gameOver = new gameOverScreen();  // neu endeckter Fehler beim Game over
     }
 
     /** Implementing neustart Method Resets the level and other components */
@@ -481,11 +558,14 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         levelAPI.loadLevel(LevelSize.SMALL);
     }
 
-    public static int getCurrentLevel() {
-        return depth;
-    }
 
     public static WorldItemBuilder getWorldItemBuilder() {
         return itemBuilder;
+    }
+    /**
+     * @return return the depth
+     */
+    public static int getCurrentLevel() {
+        return depth;
     }
 }

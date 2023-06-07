@@ -4,11 +4,12 @@ import ecs.entities.Items.GreatSword;
 import ecs.entities.Items.HealthPotion;
 import ecs.entities.Items.RubberArmor;
 import graphic.Animation;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
 /** Generator which creates a random ItemData based on the Templates prepared. */
-public class ItemDataGenerator {
+public class ItemDataGenerator implements Serializable {
     private static final List<String> missingTexture = List.of("animation/missingTexture.png");
 
     private List<ItemData> monsterLoot = List.of((ItemData) new HealthPotion());

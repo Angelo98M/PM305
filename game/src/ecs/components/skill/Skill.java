@@ -2,9 +2,10 @@ package ecs.components.skill;
 
 import ecs.components.MagicPointsComponent;
 import ecs.entities.Entity;
+import java.io.Serializable;
 import tools.Constants;
 
-public class Skill {
+public class Skill implements Serializable {
 
     private ISkillFunction skillFunction;
     private int coolDownInFrames;

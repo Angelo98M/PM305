@@ -2,7 +2,9 @@ package ecs.items;
 
 import static ecs.items.ItemType.Active;
 
-import ecs.components.*;
+
+import ecs.components.InventoryComponent;
+import ecs.components.ItemComponent;
 import ecs.components.stats.DamageModifier;
 import ecs.entities.Entity;
 import graphic.Animation;

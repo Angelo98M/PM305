@@ -1,5 +1,6 @@
 package ecs.entities;
 
+import SaveManager.GameSave;
 import dslToGame.AnimationBuilder;
 import ecs.components.*;
 import ecs.components.AnimationComponent;
@@ -11,8 +12,12 @@ import ecs.components.xp.ILevelUp;
 import ecs.components.xp.XPComponent;
 import ecs.damage.Damage;
 import ecs.damage.DamageType;
+import ecs.items.ItemData;
 import ecs.items.Tasche;
 import graphic.Animation;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Scanner;
 import level.elements.tile.Tile;
 import starter.Game;
 
@@ -20,7 +25,10 @@ import starter.Game;
  * The Hero is the player character. It's entity in the ECS. This class helps to setup the hero with
  * all its components and attributes .
  */
-public class Hero extends Entity {
+
+public class Hero extends Entity implements Serializable {
+
+    private static final long serialVerisonUID = 1L;
 
     private final int fireballCoolDown = 3;
     private final float xSpeed = 0.3f;
@@ -35,7 +43,8 @@ public class Hero extends Entity {
     private Skill secondSkill;
     private Skill thirdSkill;
     private SkillComponent skillComp;
-    private MagicPointsComponent MPC;
+    private MagicPointsComponent mpc;
+    private Scanner scanner;
 
     /** Entity with Components */
     public Hero() {
@@ -60,10 +69,9 @@ public class Hero extends Entity {
         setupVelocityComponent();
         setupAnimationComponent();
         setupHitboxComponent();
-        MPC = setupMagicPointsComponent();
+        mpc = setupMagicPointsComponent();
         PlayableComponent pc = new PlayableComponent(this);
         setupFireballSkill();
-
         setupGhostSkill();
         setupHealSkill();
         setupXPComponent();
@@ -73,7 +81,6 @@ public class Hero extends Entity {
         skillComp.addSkill(thirdSkill);
         skillComp.addSkill(melee);
         pc.setSkillSlot1(firstSkill);
-
         pc.setSkillSlot4(melee);
     }
 
@@ -195,4 +202,55 @@ public class Hero extends Entity {
     public void setupSkillComponent() {
         new SkillComponent(this);
     }
+
+    public void checkcurrentSkills(Long level) {
+        if (level == 5) {
+            ((PlayableComponent) (Game.getHero().get().getComponent(PlayableComponent.class).get()))
+                    .setSkillSlot3(thirdSkill);
+            System.out.println("Du hast den Heal skill erlernt !");
+        }
+        if (level == 10) {
+            ((PlayableComponent) (Game.getHero().get().getComponent(PlayableComponent.class).get()))
+                    .setSkillSlot2(secondSkill);
+            System.out.println("Du hast den Ghost skill erlernt !");
+        }
+    }
+    /**
+     * Mehtode is for loading the Hero SaveData
+     *
+     * @param save the GameSave with the old Data;
+     */
+    public void LoadHero(GameSave save) {
+
+        List<ItemData> items =
+                ((InventoryComponent) save.getHero().getComponent(InventoryComponent.class).get())
+                        .getItems();
+        ((HealthComponent) this.getComponent(HealthComponent.class).get())
+                .setMaximalHealthpoints(
+                        ((HealthComponent) save.getHero().getComponent(HealthComponent.class).get())
+                                .getMaximalHealthpoints());
+        ((HealthComponent) this.getComponent(HealthComponent.class).get())
+                .setCurrentHealthpoints(
+                        ((HealthComponent) save.getHero().getComponent(HealthComponent.class).get())
+                                .getCurrentHealthpoints());
+        ((XPComponent) this.getComponent(XPComponent.class).get())
+                .setCurrentLevel(
+                        ((XPComponent) save.getHero().getComponent(XPComponent.class).get())
+                                .getCurrentLevel());
+        ((XPComponent) this.getComponent(XPComponent.class).get())
+                .setCurrentXP(
+                        ((XPComponent) save.getHero().getComponent(XPComponent.class).get())
+                                .getCurrentXP());
+        ((InventoryComponent) this.getComponent(InventoryComponent.class).get()).setItemList(items);
+        checkcurrentSkills(
+                ((XPComponent) this.getComponent(XPComponent.class).get()).getCurrentLevel());
+        this.removeComponent(MagicPointsComponent.class);
+        this.addComponent(
+                (MagicPointsComponent)
+                        save.getHero().getComponent(MagicPointsComponent.class).get());
+        mpc =
+                ((MagicPointsComponent)
+                        save.getHero().getComponent(MagicPointsComponent.class).get());
+    }
+
 }
