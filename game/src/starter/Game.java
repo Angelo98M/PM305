@@ -15,8 +15,6 @@ import controller.SystemController;
 import ecs.Quests.QuestGiver.DungonQuestGiver;
 import ecs.Quests.QuestLog;
 import ecs.components.*;
-import ecs.components.ai.AIComponent;
-import ecs.components.ai.idle.PatrouilleWalk;
 import ecs.components.xp.XPComponent;
 import ecs.entities.*;
 import ecs.entities.Items.GreatSword;
@@ -34,23 +32,18 @@ import ecs.systems.*;
 import graphic.DungeonCamera;
 import graphic.Painter;
 import graphic.hud.PauseMenu;
+import graphic.hud.PuzzleMenu;
+import graphic.hud.gameOverScreen;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.logging.Logger;
-
-import graphic.hud.gameOverScreen;
 import level.IOnLevelLoader;
 import level.LevelAPI;
 import level.elements.ILevel;
-import level.elements.tile.FloorTile;
 import level.elements.tile.Tile;
-import level.elements.tile.WallTile;
 import level.generator.IGenerator;
 import level.generator.postGeneration.WallGenerator;
 import level.generator.randomwalk.RandomWalkGenerator;
-import level.tools.Coordinate;
-import level.tools.LevelElement;
 import level.tools.LevelSize;
 import tools.Constants;
 import tools.Point;
@@ -96,15 +89,18 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     private static Entity hero;
     private Logger gameLogger;
     private static Entity monster;
+    private static Entity npcQuestion;
+    private static PuzzleMenu rs;
+    private static Boolean puzzle = false;
     private WorldItemBuilder itemBuilder = new WorldItemBuilder();
     private static Entity traps;
 
     private static Entity geist;
     private static Entity grabstein;
-    private int countUpdatePerSecond=0;
-    private int geistInvisiblTime=5;
+    private int countUpdatePerSecond = 0;
+    private int geistInvisiblTime = 5;
     private DungonQuestGiver giver;
-    private Random random=new Random();
+    private Random random = new Random();
 
     private static int depth = 0;
 
@@ -136,29 +132,27 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         controller.forEach(AbstractController::update);
         camera.update();
         countUpdatePerSecond++;
-        if(countUpdatePerSecond>=30)
-        {
-            countUpdatePerSecond=0;
+        if (countUpdatePerSecond >= 30) {
+            countUpdatePerSecond = 0;
             updatePerSecond();
         }
-
     }
-    private void updatePerSecond()
-    {
-        if(getEntities().contains(geist)&&((Ghost) geist).isVisibil()&&random.nextInt(0,100)<=10)
-        {
+
+    private void updatePerSecond() {
+        if (getEntities().contains(geist)
+                && ((Ghost) geist).isVisibil()
+                && random.nextInt(0, 100) <= 10) {
             gameLogger.info("The Ghost is Disapperd but you can still feel his presents");
             ((Ghost) geist).SetInvisibil();
-            geistInvisiblTime=random.nextInt(2,7);
-
-
+            geistInvisiblTime = random.nextInt(2, 7);
         }
-        if(getEntities().contains(geist)&&!((Ghost) geist).isVisibil()&&geistInvisiblTime<=0)
-        {
+        if (getEntities().contains(geist)
+                && !((Ghost) geist).isVisibil()
+                && geistInvisiblTime <= 0) {
             gameLogger.info("The Ghost has apperde once again");
             ((Ghost) geist).SetVisibil();
         }
-        geistInvisiblTime-=1;
+        geistInvisiblTime -= 1;
     }
 
     /** Called once at the beginning of the game. */
@@ -176,8 +170,8 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         pauseMenu = new PauseMenu<>();
         controller.add(pauseMenu);
         hero = new Hero();
-
-
+        rs = new PuzzleMenu<>();
+        controller.add(rs);
 
         levelAPI = new LevelAPI(batch, painter, new WallGenerator(new RandomWalkGenerator()), this);
         levelAPI.loadLevel(LEVELSIZE);
@@ -190,35 +184,59 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         manageEntitiesSets();
         getHero().ifPresent(this::loadNextLevelIfEntityIsOnEndTile);
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) togglePause();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.L)) System.out.println(QuestLog.getInstance().printLog());
+        if (Gdx.input.isKeyJustPressed(Input.Keys.L))
+            System.out.println(QuestLog.getInstance().printLog());
         if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
-            InventoryComponent inventory = ((InventoryComponent)getHero().get().getComponent(InventoryComponent.class).get());
-            XPComponent XPC=(XPComponent)getHero().get().getComponent(XPComponent.class).get();
-            HealthComponent health = ((HealthComponent)getHero().get().getComponent(HealthComponent.class).get());
+            InventoryComponent inventory =
+                    ((InventoryComponent)
+                            getHero().get().getComponent(InventoryComponent.class).get());
+            XPComponent XPC = (XPComponent) getHero().get().getComponent(XPComponent.class).get();
+            HealthComponent health =
+                    ((HealthComponent) getHero().get().getComponent(HealthComponent.class).get());
             List<ItemData> inv = inventory.getItems();
-            MagicPointsComponent MPC = ((MagicPointsComponent)getHero().get().getComponent(MagicPointsComponent.class).get());
-            System.out.println("Du bist Aktuell Level "+XPC.getCurrentLevel()+" dir fehelen noch "+XPC.getXPToNextLevel()+" Erfahrung zum Levelaufstieg");
-            System.out.println("Aktuelle HP : "+ health.getCurrentHealthpoints() );
+            MagicPointsComponent MPC =
+                    ((MagicPointsComponent)
+                            getHero().get().getComponent(MagicPointsComponent.class).get());
+            System.out.println(
+                    "Du bist Aktuell Level "
+                            + XPC.getCurrentLevel()
+                            + " dir fehelen noch "
+                            + XPC.getXPToNextLevel()
+                            + " Erfahrung zum Levelaufstieg");
+            System.out.println("Aktuelle HP : " + health.getCurrentHealthpoints());
             System.out.println(MPC.printMP());
             System.out.println("Das Inventar enthaelt");
-            for (ItemData s:inv){
+            for (ItemData s : inv) {
                 System.out.print(s.getItemName());
-                if(s.getItemName()=="Tasche"){
-                    System.out.print(" "+(((Tasche)s).getAmount()+1));
+                if (s.getItemName() == "Tasche") {
+                    System.out.print(" " + (((Tasche) s).getAmount() + 1));
                 }
                 System.out.println();
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
-            InventoryComponent inventory = ((InventoryComponent)getHero().get().getComponent(InventoryComponent.class).get());
+            InventoryComponent inventory =
+                    ((InventoryComponent)
+                            getHero().get().getComponent(InventoryComponent.class).get());
             List<ItemData> inv = inventory.getItems();
-            if (inv.get(2).getDescription() == "A Potion that restores 3 HP"){
+            if (inv.get(2).getDescription() == "A Potion that restores 3 HP") {
                 inv.get(2).triggerUse(getHero().get());
 
-            }else if (inv.get(3).getDescription() == "Eine Tasche zum Transportieren von Heiltränken"){
+            } else if (inv.get(3).getDescription()
+                    == "Eine Tasche zum Transportieren von Heiltränken") {
 
-                Tasche bag = ((Tasche)((InventoryComponent)getHero().get().getComponent(InventoryComponent.class).get()).getItems().get(3)).getTasche();
-                if(!bag.isEmpty()) {
+                Tasche bag =
+                        ((Tasche)
+                                        ((InventoryComponent)
+                                                        getHero()
+                                                                .get()
+                                                                .getComponent(
+                                                                        InventoryComponent.class)
+                                                                .get())
+                                                .getItems()
+                                                .get(3))
+                                .getTasche();
+                if (!bag.isEmpty()) {
                     bag.getConsumable();
                 }
             }
@@ -233,32 +251,31 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         entities.clear();
         getHero().ifPresent(this::placeOnLevelStart);
         spawnMonster();
+        spawnNpcQuestion();
 
-        //setTraps();
+        // setTraps();
         /*if(random.nextInt(0,100)<=50) {
 
             gameLogger.info("a Haunted Spirit has been Locked in this layer free him ");
             geist = new Ghost();
             grabstein = new Tombstone(((Ghost) geist));
         }*/
-        if(depth==1)
-        {
-            giver=new DungonQuestGiver();
+        if (depth == 1) {
+            giver = new DungonQuestGiver();
         }
-        if(depth==5){
+        if (depth == 5) {
             itemBuilder.buildWorldItem(new GreatSword());
         }
-        if(depth==10){
+        if (depth == 10) {
             itemBuilder.buildWorldItem(new RubberArmor());
         }
-        if(depth%15==0){
-            ((MagicPointsComponent)Game.getHero().get().getComponent(MagicPointsComponent.class).get()).resetMp();
+        if (depth % 15 == 0) {
+            ((MagicPointsComponent)
+                            Game.getHero().get().getComponent(MagicPointsComponent.class).get())
+                    .resetMp();
         }
         itemBuilder.buildWorldItem(new HealthPotion());
         QuestLog.getInstance().checkAllQuests();
-
-
-
     }
 
     private void manageEntitiesSets() {
@@ -317,12 +334,25 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     /** Toggle between pause and run */
     public static void togglePause() {
         paused = !paused;
-        if (systems != null) {
-            systems.forEach(ECS_System::toggleRun);
-        }
-        if (pauseMenu != null) {
+       freeze();
+
+        if (pauseMenu != null && !puzzle) {
             if (paused) pauseMenu.showMenu();
             else pauseMenu.hideMenu();
+        }
+    }
+
+    public static void toggleRaetsel() {
+        puzzle = !puzzle;
+        freeze();
+        if (rs != null) {
+            if (puzzle) rs.showMenu();
+            else rs.hideMenu();
+        }
+    }
+    public static void freeze(){
+        if (systems != null) {
+            systems.forEach(ECS_System::toggleRun);
         }
     }
 
@@ -372,8 +402,13 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     public static Optional<Entity> getHero() {
         return Optional.ofNullable(hero);
     }
+
     public static Optional<Entity> getChort() {
         return Optional.ofNullable(monster);
+    }
+
+    public static Optional<Entity> getnpcQuestion() {
+        return Optional.ofNullable(npcQuestion);
     }
 
     /**
@@ -402,40 +437,50 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         // See also:
         // https://stackoverflow.com/questions/52011592/libgdx-set-ortho-camera
     }
-    private void setMonsterStart(Entity monster){
+
+    private void setMonsterStart(Entity monster) {
 
         entities.add(monster);
         PositionComponent pc =
-            (PositionComponent)
-                monster.getComponent(PositionComponent.class)
-                    .orElseThrow(
-                        () -> new MissingComponentException("PositionComponent"));
-        if (monster.getClass()== Chort.class) {
+                (PositionComponent)
+                        monster.getComponent(PositionComponent.class)
+                                .orElseThrow(
+                                        () -> new MissingComponentException("PositionComponent"));
+        if (monster.getClass() == Chort.class) {
 
-        } else{
+        } else {
             pc.setPosition(currentLevel.getRandomFloorTile().getCoordinate().toPoint());
         }
-
     }
-    private void spawnMonster(){
-        int j = (((rnd.nextInt(3)+1)*(int)(1+0.2*depth))+1);
+
+    private void spawnMonster() {
+        int j = (((rnd.nextInt(3) + 1) * (int) (1 + 0.2 * depth)) + 1);
         int x;
         Monster[] mons = new Monster[j];
-        for (int i = 0; i<j; i++){
-            x = /*rnd.nextInt(3)*/1;
-            if (x==0){
+        for (int i = 0; i < j; i++) {
+            x = /*rnd.nextInt(3)*/ 1;
+            if (x == 0) {
                 mons[i] = new Chort();
-            }
-            else if (x==1){
+            } else if (x == 1) {
                 mons[i] = new BlueChort();
-            }
-            else {
+            } else {
                 mons[i] = new Imp();
             }
             setMonsterStart(mons[i]);
-
         }
     }
+
+    private void spawnNpcQuestion() {
+        if (depth == 1) {
+            npcQuestion = new NpcPenguin();
+
+        }
+        if (depth==10){
+            npcQuestion=new NpcPenguin();
+            rs.reset();
+        }
+    }
+
     private void createSystems() {
         new VelocitySystem();
         new DrawSystem(painter);
@@ -447,49 +492,32 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         new SkillSystem();
         new ProjectileSystem();
     }
-    /**
-     * initalize Traps for the Dungeon
-     * This Methode is called onLevelLoad
-     */
-
-    private void setTraps(){
-        for(int i = 0; i<5;i++){
+    /** initalize Traps for the Dungeon This Methode is called onLevelLoad */
+    private void setTraps() {
+        for (int i = 0; i < 5; i++) {
             new Spikes();
         }
         new Spikes();
         new Arrow();
     }
 
-    /**
-     * Implementing Gameover Method
-     */
-    public static void GameOver(){
-        gameOver= new gameOverScreen();
+    /** Implementing Gameover Method */
+    public static void GameOver() {
+        gameOver = new gameOverScreen();
     }
 
-
-    /**
-     * Implementing neustart Method
-     * Resets the level and other components
-     */
-    public void neustart(){
+    /** Implementing neustart Method Resets the level and other components */
+    public void neustart() {
         depth = 0;
         hero = new Hero();
-        ((InventoryComponent)Game.getHero().get().getComponent(InventoryComponent.class).get()).setupInventory();
+        ((InventoryComponent) Game.getHero().get().getComponent(InventoryComponent.class).get())
+                .setupInventory();
         QuestLog.getInstance().restar();
         QuestLog.getInstance().SetPlayer((Hero) hero);
         levelAPI.loadLevel(LevelSize.SMALL);
-
-
     }
 
-
-    public static int getCurrentLevel()
-    {
+    public static int getCurrentLevel() {
         return depth;
     }
-
-
-
 }
-

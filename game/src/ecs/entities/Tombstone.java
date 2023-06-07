@@ -8,32 +8,31 @@ import ecs.components.collision.ICollide;
 import ecs.components.collision.OnColilisonDeleteGrabstein;
 import graphic.Animation;
 
-public class Tombstone extends Entity{
+public class Tombstone extends Entity {
     /**
-     * The Tomestone is an Entity that spawns wiht a Gohst attacht to it so if the player findes and touches
-     * the Tomestone both the Tomestone and the Gohst will be removed form the Level
-     * */
+     * The Tomestone is an Entity that spawns wiht a Gohst attacht to it so if the player findes and
+     * touches the Tomestone both the Tomestone and the Gohst will be removed form the Level
+     */
     private Ghost geist;
-    private Animation idle=AnimationBuilder.buildAnimation("dungeon/Tombstone");
-    private ICollide onColison=new OnColilisonDeleteGrabstein();
+
+    private Animation idle = AnimationBuilder.buildAnimation("dungeon/Tombstone");
+    private ICollide onColison = new OnColilisonDeleteGrabstein();
     /**
      * The Constructor helps to set up the Components
      *
      * @param geist Ghost
-     * */
-    public Tombstone(Ghost geist)
-    {
+     */
+    public Tombstone(Ghost geist) {
         super();
-        this.geist=geist;
+        this.geist = geist;
         new PositionComponent(this);
-        new AnimationComponent(this,idle);
-        new HitboxComponent(this,onColison,null);
-
+        new AnimationComponent(this, idle);
+        new HitboxComponent(this, onColison, null);
     }
 
     @Override
     public void OnDelete() {
-        //reward
+        // reward
         geist.RemoveGeist();
     }
 }

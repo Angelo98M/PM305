@@ -14,7 +14,7 @@ public interface ISkillFunction {
     /**
      * is Used to Check for Ability effects that have a duration
      *
-     * @param  entity the which has used the skill
-     * */
+     * @param entity the which has used the skill
+     */
     void skillAbilityReset(Entity entity);
 }

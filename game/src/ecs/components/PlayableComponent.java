@@ -19,7 +19,6 @@ public class PlayableComponent extends Component {
     private Skill skillSlot1;
     private Skill skillSlot2;
     private Skill skillSlot3;
-
     private Skill skillSlot4;
 
     /**
@@ -77,10 +76,10 @@ public class PlayableComponent extends Component {
     /**
      * @param skillSlot3 skill that will be on the first skillslot
      */
-
     public void setSkillSlot3(Skill skillSlot3) {
         this.skillSlot3 = skillSlot3;
     }
+
     public void setSkillSlot4(Skill skillSlot4) {
         this.skillSlot4 = skillSlot4;
     }
