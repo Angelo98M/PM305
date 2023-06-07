@@ -334,7 +334,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     /** Toggle between pause and run */
     public static void togglePause() {
         paused = !paused;
-       freeze();
+        freeze();
 
         if (pauseMenu != null && !puzzle) {
             if (paused) pauseMenu.showMenu();
@@ -350,7 +350,8 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             else rs.hideMenu();
         }
     }
-    public static void freeze(){
+
+    public static void freeze() {
         if (systems != null) {
             systems.forEach(ECS_System::toggleRun);
         }
@@ -473,10 +474,9 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     private void spawnNpcQuestion() {
         if (depth == 1) {
             npcQuestion = new NpcPenguin();
-
         }
-        if (depth==10){
-            npcQuestion=new NpcPenguin();
+        if (depth == 10) {
+            npcQuestion = new NpcPenguin();
             rs.reset();
         }
     }
