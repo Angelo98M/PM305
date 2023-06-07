@@ -17,6 +17,7 @@ import ecs.items.Tasche;
 import graphic.Animation;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Scanner;
 import level.elements.tile.Tile;
 import starter.Game;
 
@@ -27,6 +28,7 @@ import starter.Game;
 public class Hero extends Entity implements Serializable {
 
     private static final long serialVerisonUID = 1L;
+
     private final int fireballCoolDown = 3;
     private final float xSpeed = 0.3f;
     private final float ySpeed = 0.3f;
@@ -41,6 +43,7 @@ public class Hero extends Entity implements Serializable {
     private Skill thirdSkill;
     private SkillComponent skillComp;
     private MagicPointsComponent mpc;
+    private Scanner scanner;
 
     /** Entity with Components */
     public Hero() {

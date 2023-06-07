@@ -34,6 +34,7 @@ import ecs.systems.*;
 import graphic.DungeonCamera;
 import graphic.Painter;
 import graphic.hud.PauseMenu;
+import graphic.hud.PuzzleMenu;
 import graphic.hud.gameOverScreen;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -92,6 +93,9 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     private static Entity hero;
     private Logger gameLogger;
     private static Entity monster;
+    private static Entity npcQuestion;
+    private static PuzzleMenu rs;
+    private static Boolean puzzle = false;
     private WorldItemBuilder itemBuilder = new WorldItemBuilder();
     private static Entity traps;
     private static Entity geist;
@@ -169,6 +173,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         pauseMenu = new PauseMenu<>();
         controller.add(pauseMenu);
         hero = new Hero();
+
         if (Files.exists(Paths.get(fileLoaction)) && depth == 0) {
             try {
                 save = SaveManager.readObject(fileLoaction);
@@ -187,6 +192,9 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
                 }
             }
         }
+
+        rs = new PuzzleMenu<>();
+        controller.add(rs);
 
         levelAPI = new LevelAPI(batch, painter, new WallGenerator(new RandomWalkGenerator()), this);
         levelAPI.loadLevel(LEVELSIZE);
@@ -225,6 +233,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             for (ItemData s : inv) {
                 System.out.print(s.getItemName());
                 if (s.getItemName().equals("Tasche")) {
+
                     System.out.print(" " + (((Tasche) s).getAmount() + 1));
                 }
                 System.out.println();
@@ -236,7 +245,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
                     ((InventoryComponent)
                             getHero().get().getComponent(InventoryComponent.class).get());
             List<ItemData> inv = inventory.getItems();
-            if (inv.get(2).getDescription() == "A Potion that restores 3 HP") {
+            if (inv.get(2).getDescription().equals("A Potion that restores 3 HP")) {
                 inv.get(2).triggerUse(getHero().get());
 
             } else if (inv.get(3)
@@ -270,6 +279,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         entities.clear();
         getHero().ifPresent(this::placeOnLevelStart);
         spawnMonster();
+        spawnNpcQuestion();
 
         // setTraps();
         /*if(random.nextInt(0,100)<=50) {
@@ -294,6 +304,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         }
         itemBuilder.buildWorldItem(new HealthPotion());
         QuestLog.getInstance().checkAllQuests();
+
         save = new GameSave();
         try {
             SaveManager.writeObject(save, fileLoaction);
@@ -360,12 +371,26 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     /** Toggle between pause and run */
     public static void togglePause() {
         paused = !paused;
-        if (systems != null) {
-            systems.forEach(ECS_System::toggleRun);
-        }
-        if (pauseMenu != null) {
+        freeze();
+
+        if (pauseMenu != null && !puzzle) {
             if (paused) pauseMenu.showMenu();
             else pauseMenu.hideMenu();
+        }
+    }
+
+    public static void toggleRaetsel() {
+        puzzle = !puzzle;
+        freeze();
+        if (rs != null) {
+            if (puzzle) rs.showMenu();
+            else rs.hideMenu();
+        }
+    }
+
+    public static void freeze() {
+        if (systems != null) {
+            systems.forEach(ECS_System::toggleRun);
         }
     }
 
@@ -414,6 +439,10 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
      */
     public static Optional<Entity> getHero() {
         return Optional.ofNullable(hero);
+    }
+
+    public static Optional<Entity> getnpcQuestion() {
+        return Optional.ofNullable(npcQuestion);
     }
 
     /**
@@ -475,6 +504,16 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         }
     }
 
+    private void spawnNpcQuestion() {
+        if (depth == 1) {
+            npcQuestion = new NpcPenguin();
+        }
+        if (depth == 10) {
+            npcQuestion = new NpcPenguin();
+            rs.reset();
+        }
+    }
+
     private void createSystems() {
         new VelocitySystem();
         new DrawSystem(painter);
@@ -509,7 +548,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             }
             save = null;
         }
-        //gameOver = new gameOverScreen();  // neu endeckter Fehler beim Game over
+        // gameOver = new gameOverScreen();  // neu endeckter Fehler beim Game over
     }
 
     /** Implementing neustart Method Resets the level and other components */
@@ -522,6 +561,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         QuestLog.getInstance().SetPlayer((Hero) hero);
         levelAPI.loadLevel(LevelSize.SMALL);
     }
+
     /**
      * @return return the depth
      */

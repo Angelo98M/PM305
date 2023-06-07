@@ -7,6 +7,7 @@ import java.io.Serializable;
 import starter.Game;
 
 public class Quest implements Serializable {
+
     /** this is the Blueprint for Quests they will reward the player wiht item and later xp * */
     protected String questName;
 

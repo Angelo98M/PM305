@@ -15,6 +15,7 @@ public class InventoryComponent extends Component {
 
     private List<ItemData> inventory;
     private int maxSize;
+
     private final transient Logger inventoryLogger = Logger.getLogger(this.getClass().getName());
 
     /**
@@ -188,6 +189,7 @@ public class InventoryComponent extends Component {
     public void setItemList(List<ItemData> list) {
         inventory = list;
     }
+
     /**
      * @return the number of slots already filled with items
      */

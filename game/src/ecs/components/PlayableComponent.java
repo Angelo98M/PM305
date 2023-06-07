@@ -19,7 +19,6 @@ public class PlayableComponent extends Component {
     private Skill skillSlot1;
     private Skill skillSlot2;
     private Skill skillSlot3;
-
     private Skill skillSlot4;
 
     /**
