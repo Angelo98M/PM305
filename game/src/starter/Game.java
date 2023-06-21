@@ -6,6 +6,7 @@ import static logging.LoggerConfig.initBaseLogger;
 import SaveManager.GameSave;
 import SaveManager.SaveManager;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -235,6 +236,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
                             + " Erfahrung zum Levelaufstieg");
             System.out.println("Aktuelle HP : " + health.getCurrentHealthpoints());
             System.out.println(MPC.printMP());
+            System.out.println("dein Aktuelles Gold beträgt: "+((Hero)hero).getGold());
             System.out.println("Das Inventar enthaelt");
             for (ItemData s : inv) {
                 System.out.print(s.getItemName());
@@ -297,7 +299,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             giver = new DungonQuestGiver();
         }
         if (depth == 5) {
-            setStart(new Chest());
+             setStart(new Chest());
         }
         if (depth == 10) {
             setStart(new Mimic());
