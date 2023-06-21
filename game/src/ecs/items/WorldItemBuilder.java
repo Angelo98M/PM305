@@ -19,7 +19,21 @@ public class WorldItemBuilder {
      */
     public static Entity buildWorldItem(ItemData itemData) {
         Entity droppedItem = new Entity();
-        new PositionComponent(droppedItem, Game.currentLevel.getRandomFloorTile().getCoordinateAsPoint());
+        new PositionComponent(
+                droppedItem, Game.currentLevel.getRandomFloorTile().getCoordinateAsPoint());
+        new AnimationComponent(droppedItem, itemData.getWorldTexture());
+        new ItemComponent(droppedItem, itemData);
+        HitboxComponent component = new HitboxComponent(droppedItem);
+        component.setiCollideEnter(
+                (a, b, direction) -> {
+                    itemData.triggerCollect(a, b);
+                });
+        return droppedItem;
+    }
+
+    public static Entity buildWorldItem(ItemData itemData, Point point) {
+        Entity droppedItem = new Entity();
+        new PositionComponent(droppedItem, point);
         new AnimationComponent(droppedItem, itemData.getWorldTexture());
         new ItemComponent(droppedItem, itemData);
         HitboxComponent component = new HitboxComponent(droppedItem);

@@ -10,7 +10,8 @@ public class StarterArmor extends Armor {
     static Animation world = AnimationBuilder.buildAnimation("StarterArmor.png");
     static String description = "Your mom bought you this for your grand Adventure";
     static String itemName = "Armor";
-    public StarterArmor(){
-        super(inventory,world,itemName,description);
+
+    public StarterArmor() {
+        super(inventory, world, itemName, description);
     }
 }

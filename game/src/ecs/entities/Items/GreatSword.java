@@ -16,37 +16,40 @@ public class GreatSword extends Swords {
     static Animation world = AnimationBuilder.buildAnimation("greatSword.png");
     static String description = "Your mom bought you this for your grand Adventure";
     static String itemName = "Greatsword";
-    public GreatSword(){
-        super(inventory,world,itemName,description);
-        this.setOnCollect(new IOnCollect() {
-            @Override
-            public void onCollect(Entity WorldItemEntity, Entity whoCollides) {
-                Game.getHero()
-                    .ifPresent(
-                        hero -> {
-                            if (whoCollides.equals(hero)) {
-                                hero.getComponent(InventoryComponent.class)
-                                    .ifPresent(
-                                        (x) -> {
-                                            if (((InventoryComponent) x)
-                                                .addItem(
-                                                    WorldItemEntity
-                                                        .getComponent(
-                                                            ItemComponent
-                                                                .class)
-                                                        .map(
-                                                            ItemComponent
-                                                                .class
-                                                                ::cast)
-                                                        .get()
-                                                        .getItemData()))
-                                                Game.removeEntity(WorldItemEntity);
+
+    public GreatSword() {
+        super(inventory, world, itemName, description);
+        this.setOnCollect(
+                new IOnCollect() {
+                    @Override
+                    public void onCollect(Entity WorldItemEntity, Entity whoCollides) {
+                        Game.getHero()
+                                .ifPresent(
+                                        hero -> {
+                                            if (whoCollides.equals(hero)) {
+                                                hero.getComponent(InventoryComponent.class)
+                                                        .ifPresent(
+                                                                (x) -> {
+                                                                    if (((InventoryComponent) x)
+                                                                            .addItem(
+                                                                                    WorldItemEntity
+                                                                                            .getComponent(
+                                                                                                    ItemComponent
+                                                                                                            .class)
+                                                                                            .map(
+                                                                                                    ItemComponent
+                                                                                                                    .class
+                                                                                                            ::cast)
+                                                                                            .get()
+                                                                                            .getItemData()))
+                                                                        Game.removeEntity(
+                                                                                WorldItemEntity);
+                                                                });
+                                            }
                                         });
-                            }
-                        });
-                Hero hero = (Hero)Game.getHero().get();
-                hero.setDmg(dmg);
-            }
-        });
+                        Hero hero = (Hero) Game.getHero().get();
+                        hero.setDmg(dmg);
+                    }
+                });
     }
 }

@@ -11,8 +11,8 @@ import ecs.entities.Monster;
 import graphic.Animation;
 
 /**
- * the Imp is a simple Monster. It randomly walks through the Dungeon until it is in range of the Player
- * this classs has all its components and attributes .
+ * the Imp is a simple Monster. It randomly walks through the Dungeon until it is in range of the
+ * Player this classs has all its components and attributes .
  */
 public class Imp extends Monster {
     static float speed = 0.1f;
@@ -25,11 +25,25 @@ public class Imp extends Monster {
     static IFightAI fight = new CollideAI(1);
     static IIdleAI idle = new RadiusWalk(15, 1);
     static ITransition trans = new RangeTransition(1);
-    static Animation getHitAnimation = AnimationBuilder.buildAnimation("character/monster/chort/runLeft");
-    static Animation dieAnimation = AnimationBuilder.buildAnimation("character/monster/chort/runLeft");
+    static Animation getHitAnimation =
+            AnimationBuilder.buildAnimation("character/monster/chort/runLeft");
+    static Animation dieAnimation =
+            AnimationBuilder.buildAnimation("character/monster/chort/runLeft");
 
     static int maxHealth = 1;
-    public Imp(){
-        super(speed,idleLeft,idleRight,runLeft,runRight,fight,idle,trans, getHitAnimation, dieAnimation,maxHealth);
+
+    public Imp() {
+        super(
+                speed,
+                idleLeft,
+                idleRight,
+                runLeft,
+                runRight,
+                fight,
+                idle,
+                trans,
+                getHitAnimation,
+                dieAnimation,
+                maxHealth);
     }
 }
