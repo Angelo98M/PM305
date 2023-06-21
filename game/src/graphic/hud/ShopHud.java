@@ -21,6 +21,9 @@ public class ShopHud<T extends Actor> extends ScreenController<T> {
     private ScreenText screenText1;
     private ScreenText screenText2;
     private ScreenText screenText3;
+    private ScreenText itemPreis1;
+    private ScreenText itemPreis2;
+    private ScreenText itemPreis3;
     private ScreenInput screenInput;
     private ScreenButton screenButton1;
     private ScreenButton screenButton2;
@@ -59,6 +62,16 @@ public class ShopHud<T extends Actor> extends ScreenController<T> {
         screenImage1.setScale(4);
         screenImage1.setPosition(Constants.WINDOW_WIDTH / 4.5f, Constants.WINDOW_HEIGHT/2f, Align.center | Align.bottom);
 
+        itemPreis1=
+            new ScreenText(
+                "Preis",
+                new Point(0f,0f),
+                3,
+            new LabelStyleBuilder(FontBuilder.DEFAULT_FONT)
+                .setFontcolor(Color.WHITE)
+                .build());
+        itemPreis1.setScale(1.5f);
+        itemPreis1.setPosition(Constants.WINDOW_WIDTH/4.2f, Constants.WINDOW_HEIGHT/2.6f, Align.center | Align.bottom);
         screenButton1 =
             new ScreenButton(
                 "Kaufen",
@@ -113,7 +126,16 @@ public class ShopHud<T extends Actor> extends ScreenController<T> {
         screenImage2.setScale(4f);
         screenImage2.setPosition(Constants.WINDOW_WIDTH / 2.1f,Constants.WINDOW_HEIGHT/2f, Align.center | Align.bottom);
 
-        screenButton2 =
+        itemPreis2=
+            new ScreenText(
+                "Preis",
+                new Point(0f,0f),
+                3,
+                new LabelStyleBuilder(FontBuilder.DEFAULT_FONT)
+                    .setFontcolor(Color.WHITE)
+                    .build());
+                 itemPreis2.setScale(1.5f);
+                 itemPreis2.setPosition(Constants.WINDOW_WIDTH / 2f, Constants.WINDOW_HEIGHT/2.6f, Align.center | Align.bottom); screenButton2 =
             new ScreenButton(
                 "Kaufen",
                 new Point(0f, 0f),
@@ -167,6 +189,16 @@ public class ShopHud<T extends Actor> extends ScreenController<T> {
         screenImage3.setScale(4);
         screenImage3.setPosition(Constants.WINDOW_WIDTH / 1.37f, Constants.WINDOW_HEIGHT/2f, Align.center | Align.bottom);
 
+        itemPreis3=
+            new ScreenText(
+                "Preis",
+                new Point(0f,0f),
+                3,
+                new LabelStyleBuilder(FontBuilder.DEFAULT_FONT)
+                    .setFontcolor(Color.WHITE)
+                    .build());
+        itemPreis3.setScale(1.5f);
+        itemPreis3.setPosition(Constants.WINDOW_WIDTH/1.3f, Constants.WINDOW_HEIGHT/2.6f, Align.center | Align.bottom);
         screenButton3 =
 
             new ScreenButton(
@@ -228,6 +260,9 @@ public class ShopHud<T extends Actor> extends ScreenController<T> {
         add((T) screenNegButton2);
         add((T) screenNegButton3);
         add((T) screenText1);
+        add((T)itemPreis1);
+        add((T)itemPreis2);
+        add((T)itemPreis3);
         add((T) screenText2);
         add((T) screenText3);
         add((T) screenImage1);
