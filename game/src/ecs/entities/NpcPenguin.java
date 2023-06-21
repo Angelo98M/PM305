@@ -22,7 +22,7 @@ public class NpcPenguin extends Entity {
                 new IInteraction() {
                     @Override
                     public void onInteraction(Entity entity) {
-                        Game.toggleRaetsel();
+                        Game.toggleShop();
                     }
                 });
     }

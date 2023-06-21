@@ -34,6 +34,7 @@ import ecs.systems.*;
 import graphic.DungeonCamera;
 import graphic.Painter;
 import graphic.hud.PauseMenu;
+import graphic.hud.ShopHud;
 import graphic.hud.gameOverScreen;
 import java.io.IOException;
 import graphic.hud.PuzzleMenu;
@@ -98,8 +99,9 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
 
     private static Entity npcQuestion;
     private static PuzzleMenu rs;
+    private static ShopHud sh;
     private static Boolean puzzle = false;
-
+private static boolean shop=false;
     private static Entity traps;
     private static Entity geist;
     private static Entity grabstein;
@@ -198,7 +200,8 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
                 }
             }
         }
-
+        sh = new ShopHud<>(batch);
+        controller.add(sh);
         rs = new PuzzleMenu<>();
         controller.add(rs);
 
@@ -392,6 +395,15 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             else rs.hideMenu();
         }
     }
+    public static void toggleShop() {
+        shop=!shop;
+        freeze();
+        if (sh != null) {
+            if (shop) sh.showShop();
+            else sh.hideShop();
+        }
+    }
+
 
     public static void freeze() {
         if (systems != null) {
