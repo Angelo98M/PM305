@@ -6,9 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class QuestLog implements Serializable {
-
 
     /** The Questlog holds on to all the Quest the Player currently has and mange them * */
     private Hero hero;

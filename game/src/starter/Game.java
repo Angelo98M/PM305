@@ -6,7 +6,6 @@ import static logging.LoggerConfig.initBaseLogger;
 import SaveManager.GameSave;
 import SaveManager.SaveManager;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -33,11 +32,8 @@ import ecs.items.WorldItemBuilder;
 import ecs.systems.*;
 import graphic.DungeonCamera;
 import graphic.Painter;
-import graphic.hud.PauseMenu;
-import graphic.hud.ShopHud;
-import graphic.hud.gameOverScreen;
+import graphic.hud.*;
 import java.io.IOException;
-import graphic.hud.PuzzleMenu;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -99,9 +95,9 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
 
     private static Entity npcQuestion;
     private static PuzzleMenu rs;
-    private static ShopHud sh;
+    private static ShopInterface sh;
     private static Boolean puzzle = false;
-private static boolean shop=false;
+    private static boolean shop = false;
     private static Entity traps;
     private static Entity geist;
     private static Entity grabstein;
@@ -150,12 +146,10 @@ private static boolean shop=false;
     private void updatePerSecond() {
         if (getEntities().contains(geist)
                 && ((Ghost) geist).isVisibil()
-
                 && rnd.nextInt(0, 100) <= 10) {
             gameLogger.info("The Ghost is Disapperd but you can still feel his presents");
             ((Ghost) geist).SetInvisibil();
             geistInvisiblTime = rnd.nextInt(2, 7);
-
         }
         if (getEntities().contains(geist)
                 && !((Ghost) geist).isVisibil()
@@ -200,11 +194,10 @@ private static boolean shop=false;
                 }
             }
         }
-        sh = new ShopHud<>(batch);
+        sh = new ShopInterface();
         controller.add(sh);
-        rs = new PuzzleMenu<>();
-        controller.add(rs);
-
+        // rs = new PuzzleMenu<>();
+        // controller.add(rs);
 
         levelAPI = new LevelAPI(batch, painter, new WallGenerator(new RandomWalkGenerator()), this);
         levelAPI.loadLevel(LEVELSIZE);
@@ -239,7 +232,7 @@ private static boolean shop=false;
                             + " Erfahrung zum Levelaufstieg");
             System.out.println("Aktuelle HP : " + health.getCurrentHealthpoints());
             System.out.println(MPC.printMP());
-            System.out.println("dein Aktuelles Gold beträgt: "+((Hero)hero).getGold());
+            System.out.println("dein Aktuelles Gold beträgt: " + ((Hero) hero).getGold());
             System.out.println("Das Inventar enthaelt");
             for (ItemData s : inv) {
                 System.out.print(s.getItemName());
@@ -302,7 +295,7 @@ private static boolean shop=false;
             giver = new DungonQuestGiver();
         }
         if (depth == 5) {
-             setStart(new Chest());
+            setStart(new Chest());
         }
         if (depth == 10) {
             setStart(new Mimic());
@@ -395,15 +388,15 @@ private static boolean shop=false;
             else rs.hideMenu();
         }
     }
+
     public static void toggleShop() {
-        shop=!shop;
+        shop = !shop;
         freeze();
         if (sh != null) {
             if (shop) sh.showShop();
             else sh.hideShop();
         }
     }
-
 
     public static void freeze() {
         if (systems != null) {
@@ -457,6 +450,7 @@ private static boolean shop=false;
     public static Optional<Entity> getHero() {
         return Optional.ofNullable(hero);
     }
+
     public static Optional<Entity> getnpcQuestion() {
         return Optional.ofNullable(npcQuestion);
     }
@@ -518,12 +512,13 @@ private static boolean shop=false;
             setStart(mons[i]);
         }
     }
+
     private void spawnNpcQuestion() {
         if (depth == 1) {
             npcQuestion = new NpcPenguin();
         }
-
     }
+
     private void createSystems() {
         new VelocitySystem();
         new DrawSystem(painter);
@@ -572,7 +567,6 @@ private static boolean shop=false;
         levelAPI.loadLevel(LevelSize.SMALL);
     }
 
-
     public static WorldItemBuilder getWorldItemBuilder() {
         return itemBuilder;
     }
@@ -581,5 +575,10 @@ private static boolean shop=false;
      */
     public static int getCurrentLevel() {
         return depth;
+    }
+
+    public static void openShop(ItemData[] items, String[] regex, float faktor, int[] amount) {
+        sh.setupNewShop(items, regex, faktor, amount);
+        toggleShop();
     }
 }

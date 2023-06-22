@@ -15,10 +15,11 @@ public class GreatSword extends Swords {
     static Animation inventory = AnimationBuilder.buildAnimation("greatSword.png");
     static Animation world = AnimationBuilder.buildAnimation("greatSword.png");
     static String description = "Your mom bought you this for your grand Adventure";
-    static String itemName = "Greatsword";
+    static String itemName = "Großschwert";
 
     public GreatSword() {
         super(inventory, world, itemName, description);
+        setItemPrice(40);
         this.setOnCollect(
                 new IOnCollect() {
                     @Override

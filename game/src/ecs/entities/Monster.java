@@ -11,10 +11,9 @@ import ecs.components.xp.XPComponent;
 import ecs.damage.Damage;
 import ecs.damage.DamageType;
 import graphic.Animation;
+import java.util.Random;
 import level.elements.tile.Tile;
 import starter.Game;
-
-import java.util.Random;
 
 /**
  * The Monsters are unfriendly NPCs. It's entity in the ECS. This class helps to setup the Monsters
@@ -40,7 +39,7 @@ public abstract class Monster extends Entity {
             int maxHealth) {
         super();
         Random rnd = new Random();
-        gold= rnd.nextInt(1,4);
+        gold = rnd.nextInt(1, 4);
         PositionComponent pos = new PositionComponent(this);
         new XPComponent(this, null, 50);
         new AnimationComponent(this, idleLeft, idleRight);
@@ -53,20 +52,15 @@ public abstract class Monster extends Entity {
                         maxHealth,
                         new IOnDeathFunction() {
                             @Override
-                            public void onDeath(Entity entity)
-                            {
-                                HealthComponent entityhealth = (HealthComponent) entity.getComponent(HealthComponent.class).get();
-                                if(entityhealth.getLastDamageCause().equals(Game.getHero().get()))
+                            public void onDeath(Entity entity) {
                                 {
                                     QuestLog.getInstance().checkAllQuests(entity);
-                                    ((Hero)Game.getHero().get()).addGold(gold);
+                                    ((Hero) Game.getHero().get()).addGold(gold);
                                 }
                             }
-
                         },
                         dieAnimation,
                         getHitAnimation);
-
 
         HitboxComponent hit =
                 new HitboxComponent(
@@ -83,6 +77,5 @@ public abstract class Monster extends Entity {
                         (you, other, direction) ->
                                 System.out.println(
                                         "HeroCollisionLeave") /*health.receiveHit(dmg)*/);
-
     }
 }

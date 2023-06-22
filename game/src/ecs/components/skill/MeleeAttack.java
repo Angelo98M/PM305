@@ -13,7 +13,6 @@ import graphic.Animation;
 import starter.Game;
 import tools.Point;
 
-
 public class MeleeAttack extends DamageProjectileSkill {
 
     private static String animationPath = "";
@@ -202,7 +201,7 @@ public class MeleeAttack extends DamageProjectileSkill {
                 if (arc < 0.4) {
                     animationPath = "character/knight/attack/east";
                 } else if (arc > 0.80) {
-//
+                    //
                     animationPath = "character/knight/attack/south/south";
 
                 } else if (arc <= 0.80 && arc >= 0.4) {

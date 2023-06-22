@@ -15,7 +15,7 @@ public class HealthPotion extends Consumables {
     static Animation inventoryTexture =
             AnimationBuilder.buildAnimation("items/potions/Healthpotion");
 
-    static String itemName = "Potion of Healing";
+    static String itemName = "Heiltrank";
 
     static String description = "A Potion that restores 3 HP";
 
@@ -48,5 +48,6 @@ public class HealthPotion extends Consumables {
 
     public HealthPotion() {
         super(inventoryTexture, inventoryTexture, itemName, description, use);
+        setItemPrice(10);
     }
 }

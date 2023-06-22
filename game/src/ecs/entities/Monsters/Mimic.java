@@ -16,8 +16,8 @@ import graphic.Animation;
 
 /**
  * the Mimic is a Monster that tries to disguise itself as a chest. It randomly spawns in the
- * Dungeon but is peaceful until the Hero tries to Interact with it.
- * onDeath the Mimik drops an Item via calling the MobLoot-Strategy
+ * Dungeon but is peaceful until the Hero tries to Interact with it. onDeath the Mimik drops an Item
+ * via calling the MobLoot-Strategy
  */
 public class Mimic extends Monster {
     static float speed = 0.1f;

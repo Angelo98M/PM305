@@ -19,14 +19,12 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Scanner;
 import level.elements.tile.Tile;
-import runtime.Value;
 import starter.Game;
 
 /**
  * The Hero is the player character. It's entity in the ECS. This class helps to setup the hero with
  * all its components and attributes .
  */
-
 public class Hero extends Entity implements Serializable {
 
     private static final long serialVerisonUID = 1L;
@@ -46,7 +44,7 @@ public class Hero extends Entity implements Serializable {
     private SkillComponent skillComp;
     private MagicPointsComponent mpc;
     private Scanner scanner;
-    private int gold = 0;
+    private int gold = 1000;
 
     /** Entity with Components */
     public Hero() {
@@ -257,19 +255,28 @@ public class Hero extends Entity implements Serializable {
 
     /**
      * a function to get current gold that the player has
+     *
      * @return current gold that the player has
      */
-    public int getGold(){return gold;}
+    public int getGold() {
+        return gold;
+    }
 
     /**
      * a funtction to add Gold to the player
+     *
      * @param value amount of Gold to be added
      */
-    public void addGold(int value) {gold+= value;}
+    public void addGold(int value) {
+        gold += value;
+    }
 
     /**
      * a function that is used for paying a cost and reduce Player gold
+     *
      * @param value cost of the object
      */
-    public void Pay(int value){gold-= value;}
+    public void pay(int value) {
+        gold -= value;
+    }
 }
