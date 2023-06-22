@@ -97,8 +97,9 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
 
     private static Entity npcQuestion;
     private static PuzzleMenu rs;
+    private static ShopInterface sh;
     private static Boolean puzzle = false;
-
+    private static boolean shop = false;
     private static Entity traps;
     private static Entity geist;
     private static Entity grabstein;
@@ -196,8 +197,11 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             }
         }
 
-        rs = new PuzzleMenu<>();
-        controller.add(rs);
+        sh = new ShopInterface();
+        controller.add(sh);
+        // rs = new PuzzleMenu<>();
+        // controller.add(rs);
+
 
         levelAPI = new LevelAPI(batch, painter, new WallGenerator(new RandomWalkGenerator()), this);
         levelAPI.loadLevel(LEVELSIZE);
@@ -232,6 +236,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
                             + " Erfahrung zum Levelaufstieg");
             System.out.println("Aktuelle HP : " + health.getCurrentHealthpoints());
             System.out.println(MPC.printMP());
+            System.out.println("dein Aktuelles Gold beträgt: " + ((Hero) hero).getGold());
             System.out.println("Das Inventar enthaelt");
             for (ItemData s : inv) {
                 System.out.print(s.getItemName());
@@ -385,6 +390,15 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         if (rs != null) {
             if (puzzle) rs.showMenu();
             else rs.hideMenu();
+        }
+    }
+
+    public static void toggleShop() {
+        shop = !shop;
+        freeze();
+        if (sh != null) {
+            if (shop) sh.showShop();
+            else sh.hideShop();
         }
     }
 
@@ -565,5 +579,10 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
      */
     public static int getCurrentLevel() {
         return depth;
+    }
+
+    public static void openShop(ItemData[] items, String[] regex, float faktor, int[] amount) {
+        sh.setupNewShop(items, regex, faktor, amount);
+        toggleShop();
     }
 }

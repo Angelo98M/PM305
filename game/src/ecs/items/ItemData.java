@@ -14,6 +14,7 @@ import tools.Point;
 /** A Class which contains the Information of a specific Item. */
 public class ItemData implements Serializable {
     private ItemType itemType;
+    private int itemPrice;
     private Animation inventoryTexture;
     private Animation worldTexture;
     private String itemName;
@@ -216,5 +217,13 @@ public class ItemData implements Serializable {
 
     public void setOnUse(IOnUse onUse) {
         this.onUse = onUse;
+    }
+
+    public int getItemPrice() {
+        return itemPrice;
+    }
+
+    public void setItemPrice(int itemPrice) {
+        this.itemPrice = itemPrice;
     }
 }

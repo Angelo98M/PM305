@@ -44,6 +44,7 @@ public class Hero extends Entity implements Serializable {
     private SkillComponent skillComp;
     private MagicPointsComponent mpc;
     private Scanner scanner;
+    private int gold = 1000;
 
     /** Entity with Components */
     public Hero() {
@@ -252,4 +253,32 @@ public class Hero extends Entity implements Serializable {
                 ((MagicPointsComponent)
                         save.getHero().getComponent(MagicPointsComponent.class).get());
     }
+
+    /**
+     * a function to get current gold that the player has
+     *
+     * @return current gold that the player has
+     */
+    public int getGold() {
+        return gold;
+    }
+
+    /**
+     * a funtction to add Gold to the player
+     *
+     * @param value amount of Gold to be added
+     */
+    public void addGold(int value) {
+        gold += value;
+    }
+
+    /**
+     * a function that is used for paying a cost and reduce Player gold
+     *
+     * @param value cost of the object
+     */
+    public void pay(int value) {
+        gold -= value;
+    }
+
 }

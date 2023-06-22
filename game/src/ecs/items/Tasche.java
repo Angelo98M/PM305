@@ -34,6 +34,12 @@ public class Tasche extends ItemData {
         return false;
     }
 
+    public void removeItem() {
+        if (content.get(content.size() - 1) != null && content.size() > 0) {
+            content.remove(content.size() - 1);
+        }
+    }
+
     public ItemData getConsumable() {
         if (content.get(content.size() - 1) != null && content.size() > 0) {
             ItemData item = content.get(content.size() - 1);

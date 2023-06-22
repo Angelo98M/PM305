@@ -15,11 +15,12 @@ public class RubberArmor extends Armor {
     static Animation inventory = AnimationBuilder.buildAnimation("RubberArmor.png");
     static Animation world = AnimationBuilder.buildAnimation("RubberArmor.png");
     static String description = "It lets Attacks bounce right of you";
-    static String itemName = "Armor with rubber-coating";
+    static String itemName = "Gummirüstung";
 
     public RubberArmor() {
 
         super(inventory, world, itemName, description);
+        setItemPrice(60);
         this.setOnCollect(
                 new IOnCollect() {
                     @Override

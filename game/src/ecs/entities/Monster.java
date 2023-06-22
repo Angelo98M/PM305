@@ -11,7 +11,9 @@ import ecs.components.xp.XPComponent;
 import ecs.damage.Damage;
 import ecs.damage.DamageType;
 import graphic.Animation;
+import java.util.Random;
 import level.elements.tile.Tile;
+import starter.Game;
 
 /**
  * The Monsters are unfriendly NPCs. It's entity in the ECS. This class helps to setup the Monsters
@@ -19,6 +21,8 @@ import level.elements.tile.Tile;
  */
 public abstract class Monster extends Entity {
     /** Entity with Components */
+    int gold;
+
     public Monster() {}
 
     public Monster(
@@ -34,6 +38,8 @@ public abstract class Monster extends Entity {
             Animation dieAnimation,
             int maxHealth) {
         super();
+        Random rnd = new Random();
+        gold = rnd.nextInt(1, 4);
         PositionComponent pos = new PositionComponent(this);
         new XPComponent(this, null, 50);
         new AnimationComponent(this, idleLeft, idleRight);
@@ -47,7 +53,10 @@ public abstract class Monster extends Entity {
                         new IOnDeathFunction() {
                             @Override
                             public void onDeath(Entity entity) {
-                                QuestLog.getInstance().checkAllQuests(entity);
+                                {
+                                    QuestLog.getInstance().checkAllQuests(entity);
+                                    ((Hero) Game.getHero().get()).addGold(gold);
+                                }
                             }
                         },
                         dieAnimation,
