@@ -33,9 +33,9 @@ import ecs.systems.*;
 import graphic.DungeonCamera;
 import graphic.Painter;
 import graphic.hud.PauseMenu;
+import graphic.hud.PuzzleMenu;
 import graphic.hud.gameOverScreen;
 import java.io.IOException;
-import graphic.hud.PuzzleMenu;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -147,12 +147,10 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     private void updatePerSecond() {
         if (getEntities().contains(geist)
                 && ((Ghost) geist).isVisibil()
-
                 && rnd.nextInt(0, 100) <= 10) {
             gameLogger.info("The Ghost is Disapperd but you can still feel his presents");
             ((Ghost) geist).SetInvisibil();
             geistInvisiblTime = rnd.nextInt(2, 7);
-
         }
         if (getEntities().contains(geist)
                 && !((Ghost) geist).isVisibil()
@@ -200,7 +198,6 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
 
         rs = new PuzzleMenu<>();
         controller.add(rs);
-
 
         levelAPI = new LevelAPI(batch, painter, new WallGenerator(new RandomWalkGenerator()), this);
         levelAPI.loadLevel(LEVELSIZE);
@@ -443,6 +440,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     public static Optional<Entity> getHero() {
         return Optional.ofNullable(hero);
     }
+
     public static Optional<Entity> getnpcQuestion() {
         return Optional.ofNullable(npcQuestion);
     }
@@ -504,12 +502,13 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             setStart(mons[i]);
         }
     }
+
     private void spawnNpcQuestion() {
         if (depth == 1) {
             npcQuestion = new NpcPenguin();
         }
-
     }
+
     private void createSystems() {
         new VelocitySystem();
         new DrawSystem(painter);
@@ -557,7 +556,6 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         QuestLog.getInstance().SetPlayer((Hero) hero);
         levelAPI.loadLevel(LevelSize.SMALL);
     }
-
 
     public static WorldItemBuilder getWorldItemBuilder() {
         return itemBuilder;

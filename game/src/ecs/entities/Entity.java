@@ -54,5 +54,4 @@ public class Entity implements Serializable {
     }
 
     public void OnDelete() {}
-
 }

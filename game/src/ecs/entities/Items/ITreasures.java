@@ -5,12 +5,13 @@ import ecs.components.PositionComponent;
 import ecs.entities.Chest;
 import ecs.entities.Entity;
 import ecs.items.ItemData;
+import java.util.logging.Logger;
 import tools.Point;
 
-import java.util.logging.Logger;
 /** This Interface is used to implement Loot dropping via a Strategy Pattern */
 public interface ITreasures {
     Logger dropLogger = Logger.getLogger("Drop");
+
     default void dropItems(Entity entity, ItemData loot) {
         PositionComponent positionComponent =
                 entity.getComponent(PositionComponent.class)
@@ -20,7 +21,7 @@ public interface ITreasures {
                                         createMissingComponentException(
                                                 PositionComponent.class.getName(), entity));
         loot.triggerDrop(entity, calculateDropPosition(positionComponent, 2));
-        dropLogger.info(loot.getClass().getSimpleName()+" was dropped");
+        dropLogger.info(loot.getClass().getSimpleName() + " was dropped");
     }
 
     /**

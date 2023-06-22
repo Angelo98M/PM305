@@ -4,6 +4,7 @@ import ecs.entities.Entity;
 import ecs.entities.Items.ITreasures;
 import ecs.items.ItemData;
 import ecs.items.ItemDataGenerator;
+
 /** This class is the Strategy for implementing ChestLootDrops */
 public class ChestLoot implements ITreasures {
 

@@ -25,7 +25,6 @@ import starter.Game;
  * The Hero is the player character. It's entity in the ECS. This class helps to setup the hero with
  * all its components and attributes .
  */
-
 public class Hero extends Entity implements Serializable {
 
     private static final long serialVerisonUID = 1L;
@@ -103,9 +102,10 @@ public class Hero extends Entity implements Serializable {
     private void setupFireballSkill() {
         firstSkill =
                 new Skill(
-                        new FireballSkill(SkillTools::getCursorPositionAsPoint),
+                        /*new FireballSkill(SkillTools::getCursorPositionAsPoint),
                         fireballCoolDown,
-                        1);
+                        1);*/
+                        new ShatterFloorSkill(),fireballCoolDown,0);
     }
     /** give hero the skill Ghost and Heal */
     private void setupGhostSkill() {
@@ -252,5 +252,4 @@ public class Hero extends Entity implements Serializable {
                 ((MagicPointsComponent)
                         save.getHero().getComponent(MagicPointsComponent.class).get());
     }
-
 }
