@@ -16,7 +16,6 @@ public class InventoryComponent extends Component {
     private List<ItemData> inventory;
     private int maxSize;
 
-
     private final transient Logger inventoryLogger = Logger.getLogger(this.getClass().getName());
 
     /**

@@ -5,6 +5,7 @@ import ecs.components.*;
 import ecs.entities.Items.DropSystem.ChestLoot;
 import java.util.List;
 
+/** Implements treasurechest inside of the dungeon which drop loot on interaction */
 public class Chest extends Entity {
 
     public static final float defaultInteractionRadius = 1f;
@@ -17,10 +18,7 @@ public class Chest extends Entity {
                     "objects/treasurechest/chest_full_open_anim_f2.png",
                     "objects/treasurechest/chest_empty_open_anim_f2.png");
 
-    /**
-     * Creates a new Chest which uses a ChestLoot-Strategy on interaction
-     *
-     */
+    /** Creates a new Chest which uses a ChestLoot-Strategy on interaction */
     public Chest() {
         new PositionComponent(this);
 

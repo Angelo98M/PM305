@@ -146,4 +146,8 @@ public class HitboxComponent extends Component {
         return new MissingComponentException(
                 PositionComponent.class.getName() + " in " + HitboxComponent.class.getName());
     }
+    public ICollide getiCollideEnter(){
+
+        return iCollideEnter;
+    }
 }

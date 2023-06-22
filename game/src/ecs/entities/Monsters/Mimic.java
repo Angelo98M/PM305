@@ -16,8 +16,8 @@ import graphic.Animation;
 
 /**
  * the Mimic is a Monster that tries to disguise itself as a chest. It randomly spawns in the
- * Dungeon but is peaceful until the Hero tries to Interact with it.
- * onDeath the Mimik drops an Item via calling the MobLoot-Strategy
+ * Dungeon but is peaceful until the Hero tries to Interact with it. onDeath the Mimik drops an Item
+ * via calling the MobLoot-Strategy
  */
 public class Mimic extends Monster {
     static float speed = 0.1f;
@@ -35,10 +35,9 @@ public class Mimic extends Monster {
 
     static int maxHealth = 10;
 
-    private boolean interacted;
+    private boolean interacted = false;
 
     public Mimic() {
-
         super(
                 speed,
                 animation,
@@ -47,12 +46,12 @@ public class Mimic extends Monster {
                 walkAnimation,
                 fight,
                 idle,
-                new ITransition() {
+                /*new ITransition() { //() -> return false
                     @Override
                     public boolean isInFightMode(Entity entity) {
                         return false;
                     }
-                },
+                }*/ null,
                 getHitAnimation,
                 dieAnimation,
                 maxHealth);
@@ -65,7 +64,6 @@ public class Mimic extends Monster {
                                 return interacted;
                             }
                         });
-
         new InteractionComponent(
                 this,
                 1f,

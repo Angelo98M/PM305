@@ -19,9 +19,7 @@ public class ItemDataGenerator implements Serializable {
     private Random rand = new Random();
 
     /**
-     * @return a new randomItemData for the wanted loot pool
-     * type = 1 monsterLoot
-     * type = 2 chestLoot
+     * @return a new randomItemData for the wanted loot pool type = 1 monsterLoot type = 2 chestLoot
      */
     public ItemData generateItemData(int type) {
         switch (type) {

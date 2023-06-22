@@ -33,9 +33,10 @@ import ecs.systems.*;
 import graphic.DungeonCamera;
 import graphic.Painter;
 import graphic.hud.PauseMenu;
+import graphic.hud.PuzzleMenu;
+import graphic.hud.ShopInterface;
 import graphic.hud.gameOverScreen;
 import java.io.IOException;
-import graphic.hud.PuzzleMenu;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -97,8 +98,9 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
 
     private static Entity npcQuestion;
     private static PuzzleMenu rs;
+    private static ShopInterface sh;
     private static Boolean puzzle = false;
-
+    private static boolean shop = false;
     private static Entity traps;
     private static Entity geist;
     private static Entity grabstein;
@@ -147,12 +149,10 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     private void updatePerSecond() {
         if (getEntities().contains(geist)
                 && ((Ghost) geist).isVisibil()
-
                 && rnd.nextInt(0, 100) <= 10) {
             gameLogger.info("The Ghost is Disapperd but you can still feel his presents");
             ((Ghost) geist).SetInvisibil();
             geistInvisiblTime = rnd.nextInt(2, 7);
-
         }
         if (getEntities().contains(geist)
                 && !((Ghost) geist).isVisibil()
@@ -198,8 +198,10 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             }
         }
 
-        rs = new PuzzleMenu<>();
-        controller.add(rs);
+        sh = new ShopInterface();
+        controller.add(sh);
+        // rs = new PuzzleMenu<>();
+        // controller.add(rs);
 
 
         levelAPI = new LevelAPI(batch, painter, new WallGenerator(new RandomWalkGenerator()), this);
@@ -235,6 +237,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
                             + " Erfahrung zum Levelaufstieg");
             System.out.println("Aktuelle HP : " + health.getCurrentHealthpoints());
             System.out.println(MPC.printMP());
+            System.out.println("dein Aktuelles Gold beträgt: " + ((Hero) hero).getGold());
             System.out.println("Das Inventar enthaelt");
             for (ItemData s : inv) {
                 System.out.print(s.getItemName());
@@ -391,6 +394,15 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         }
     }
 
+    public static void toggleShop() {
+        shop = !shop;
+        freeze();
+        if (sh != null) {
+            if (shop) sh.showShop();
+            else sh.hideShop();
+        }
+    }
+
     public static void freeze() {
         if (systems != null) {
             systems.forEach(ECS_System::toggleRun);
@@ -443,6 +455,7 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
     public static Optional<Entity> getHero() {
         return Optional.ofNullable(hero);
     }
+
     public static Optional<Entity> getnpcQuestion() {
         return Optional.ofNullable(npcQuestion);
     }
@@ -504,12 +517,13 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
             setStart(mons[i]);
         }
     }
+
     private void spawnNpcQuestion() {
         if (depth == 1) {
             npcQuestion = new NpcPenguin();
         }
-
     }
+
     private void createSystems() {
         new VelocitySystem();
         new DrawSystem(painter);
@@ -558,7 +572,6 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
         levelAPI.loadLevel(LevelSize.SMALL);
     }
 
-
     public static WorldItemBuilder getWorldItemBuilder() {
         return itemBuilder;
     }
@@ -567,5 +580,10 @@ public class Game extends ScreenAdapter implements IOnLevelLoader {
      */
     public static int getCurrentLevel() {
         return depth;
+    }
+
+    public static void openShop(ItemData[] items, String[] regex, float faktor, int[] amount) {
+        sh.setupNewShop(items, regex, faktor, amount);
+        toggleShop();
     }
 }
