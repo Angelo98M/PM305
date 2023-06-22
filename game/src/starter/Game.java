@@ -34,6 +34,7 @@ import graphic.DungeonCamera;
 import graphic.Painter;
 import graphic.hud.PauseMenu;
 import graphic.hud.PuzzleMenu;
+import graphic.hud.ShopInterface;
 import graphic.hud.gameOverScreen;
 import java.io.IOException;
 import java.nio.file.Files;
